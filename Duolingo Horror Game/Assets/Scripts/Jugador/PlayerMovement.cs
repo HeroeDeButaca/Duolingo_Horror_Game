@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float runSpeed = 5;
     [SerializeField] private float gravity = 20;
     private Vector3 move = Vector3.zero;
+    [SerializeField]private Vector3 spawnPoint;
     [HideInInspector]public bool movimientoActivo = true;
 
     [Header("Opciones de Camara")]
@@ -32,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
     [Range(0, 50)] [SerializeField] private float staminaRegen = 0.5f;
 
     [Header("Elementos UI Stamina")]
-    [SerializeField] private Image staminaProgressUI = null;
+    [SerializeField] private Image staminaProgressUI = null, staminaProgressUI2 = null;
     [SerializeField] private CanvasGroup sliderCanvasGroup = null;
 
     void Start()
@@ -103,7 +104,8 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateStamina(int value)
     {
         staminaProgressUI.fillAmount = playerStamina / maxStamina;
-        if(value == 0)
+        staminaProgressUI2.fillAmount = playerStamina / maxStamina;
+        if (value == 0)
         {
             sliderCanvasGroup.alpha = 0;
         }
@@ -111,5 +113,10 @@ public class PlayerMovement : MonoBehaviour
         {
             sliderCanvasGroup.alpha = 1;
         }
+    }
+    public void GoToSpawnPoint()
+    {
+        Debug.Log("Jugador va al Spawn");
+        transform.position = spawnPoint;
     }
 }

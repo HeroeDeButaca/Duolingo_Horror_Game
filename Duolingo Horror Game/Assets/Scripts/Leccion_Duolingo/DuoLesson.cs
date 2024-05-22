@@ -12,17 +12,19 @@ public class DuoLesson : MonoBehaviour
         {"Hola", "me", "llamo", "una", "Duo" },
         {"gustan", "conejos", "Me", "los", "las" },
         {"conejos", "comer", "como", "Él", "Yo" },
-        {"comer", "Tu", "conejos", "comes", "Él" }
+        {"comer", "Tu", "conejos", "comes", "Él" },
+        {"gusta", "humanos", "también", "comer", "Me" }
     };
     private string[] stringIngles =
     {
         "Hello, my name is Duo",
         "I like rabbits",
         "I eat rabbits",
-        "Do you eat rabbits?"
+        "Do you eat rabbits?",
+        "I like to eat humans too"
     };
-    private string[] idAns = {"0124", "2031", "420", "132"};
-    public string idIntroducido;
+    private string[] idAns = /*{"0124", "2031", "420", "132", "40312"}*/ {"Hola me llamo Duo ", "Me gustan los conejos ", "Yo como conejos ", "Tu comes conejos ", "Me gusta comer humanos también "};
+    public string idIntroducido, fraseIntroducida;
     [SerializeField] private int actLevel = 0;
     private bool esCorrecto = false, esIncorrecto = false, cubosDestruidos, invocarCubos = false;
 
@@ -31,9 +33,10 @@ public class DuoLesson : MonoBehaviour
     [SerializeField] private TMP_Text textoIngles;
     public int palabrasIntroducidas;
     [SerializeField] private Image barraLeccion;
-    [SerializeField] private GameObject panelCargando;
+    [SerializeField] private GameObject panelCargando, leccionCompletada;
     private float tiempoCargando;
     private bool cargando;
+    [SerializeField] private Button resetButton, comprobarButton, cerrarButton;
 
     [Header("Cubos Leccion")]
     [SerializeField]private GameObject padreLeccion;
@@ -70,7 +73,7 @@ public class DuoLesson : MonoBehaviour
     }
     private void InvocarCubos()
     {
-        if (invocarCubos)
+        if (invocarCubos && actLevel <= idAns.Length - 1)
         {
             textoIngles.text = stringIngles[actLevel];
             for (int i = 0; i < 5; i++)
@@ -102,6 +105,7 @@ public class DuoLesson : MonoBehaviour
                         break;
                 }
                 cubosEnPantalla[i].GetComponent<Boton_palabra_leccion>().id = i;
+                cubosEnPantalla[i].GetComponent<Boton_palabra_leccion>().palabraBoton = stringLeccion[actLevel, i];
                 if(i <= 5)
                 {
                     invocarCubos = false;
@@ -120,6 +124,7 @@ public class DuoLesson : MonoBehaviour
     public void ResetPalabras()
     {
         idIntroducido = null;
+        fraseIntroducida = null;
         palabrasIntroducidas = 0;
         for(int o = 0; o < 5; o++)
         {
@@ -132,6 +137,7 @@ public class DuoLesson : MonoBehaviour
     private void DestruirCubos()
     {
         idIntroducido = null;
+        fraseIntroducida = null;
         palabrasIntroducidas = 0;
         for(int d = 0; d < 5; d++)
         {
@@ -145,13 +151,13 @@ public class DuoLesson : MonoBehaviour
     }
     public void Boton_Comprobar()
     {
-        if(idIntroducido == idAns[actLevel])
+        if(/*idIntroducido == idAns[actLevel]*/ fraseIntroducida == idAns[actLevel])
         {
             Debug.Log("Continuar leccion" + actLevel);
             esCorrecto = true;
             Comprobar();
         }
-        else if(idIntroducido != idAns[actLevel])
+        else if(/*idIntroducido != idAns[actLevel]*/ fraseIntroducida == idAns[actLevel])
         {
             esIncorrecto = true;
             Comprobar();
@@ -176,6 +182,10 @@ public class DuoLesson : MonoBehaviour
                 else if(actLevel > idAns.Length - 1)
                 {
                     textoIngles.text = "¡Lección Completada!";
+                    leccionCompletada.SetActive(true);
+                    resetButton.interactable = false;
+                    comprobarButton.interactable = false;
+                    cerrarButton.interactable = false;
                 }
                 esCorrecto = false;
                 cubosDestruidos = false;
@@ -201,12 +211,16 @@ public class DuoLesson : MonoBehaviour
             panelCargando.SetActive(true);
             tiempoCargando += Time.deltaTime;
             Debug.Log("Cargando...");
+            resetButton.interactable = false;
+            comprobarButton.interactable = false;
         }
         else if (tiempoCargando >= 3.5f && cargando)
         {
             panelCargando.SetActive(false);
             tiempoCargando = 0;
             cargando = false;
+            resetButton.interactable = true;
+            comprobarButton.interactable = true;
         }
     }
 }

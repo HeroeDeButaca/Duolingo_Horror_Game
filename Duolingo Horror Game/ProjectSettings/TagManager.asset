@@ -8,6 +8,8 @@ TagManager:
   - Ordenador_leccion
   - Boton_palabra
   - Canvas
+  - Duolingo
+  - Puerta_duo
   layers:
   - Default
   - TransparentFX

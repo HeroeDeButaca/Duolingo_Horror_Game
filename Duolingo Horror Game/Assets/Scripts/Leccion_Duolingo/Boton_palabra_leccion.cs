@@ -6,6 +6,7 @@ public class Boton_palabra_leccion : MonoBehaviour
 {
     private DuoLesson duoLesson;
     public int id, orden;
+    public string palabraBoton;
     private RectTransform rectTransform;
     public bool reordenar_palabras, esRespuesta, noCambiar;
     private float timeElapsed = 0, lerpDuration = 0.5f;
@@ -98,7 +99,8 @@ public class Boton_palabra_leccion : MonoBehaviour
             duoLesson.palabrasIntroducidas++;
             orden = duoLesson.palabrasIntroducidas;
             duoLesson.palabrasEnUso.Add(this.gameObject);
-            duoLesson.idIntroducido = duoLesson.idIntroducido + id;
+            duoLesson.idIntroducido += id;
+            duoLesson.fraseIntroducida += palabraBoton + " ";
         }
     }
     public void Reordenar_palabras()
