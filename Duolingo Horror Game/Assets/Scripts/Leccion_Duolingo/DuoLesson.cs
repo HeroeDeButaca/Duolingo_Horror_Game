@@ -23,18 +23,19 @@ public class DuoLesson : MonoBehaviour
         "Do you eat rabbits?",
         "I like to eat humans too"
     };
-    private string[] idAns = /*{"0124", "2031", "420", "132", "40312"}*/ {"Hola me llamo Duo ", "Me gustan los conejos ", "Yo como conejos ", "Tu comes conejos ", "Me gusta comer humanos también "};
+    private string[] idAns = {"Hola me llamo Duo ", "Me gustan los conejos ", "Yo como conejos ", "Tu comes conejos ", "Me gusta comer humanos también "};
     public string idIntroducido, fraseIntroducida;
     [SerializeField] private int actLevel = 0;
     private bool esCorrecto = false, esIncorrecto = false, cubosDestruidos, invocarCubos = false;
 
     [Header("Canvas")]
-    [SerializeField] private CanvasGroup canvasLeccion;
+    public CanvasGroup canvasLeccion, canvasLinterna;
     [SerializeField] private TMP_Text textoIngles;
     public int palabrasIntroducidas;
     [SerializeField] private Image barraLeccion;
     [SerializeField] private GameObject panelCargando, leccionCompletada;
     private float tiempoCargando;
+    [SerializeField] private float tiempoDeCarga;
     private bool cargando;
     [SerializeField] private Button resetButton, comprobarButton, cerrarButton;
 
@@ -46,9 +47,11 @@ public class DuoLesson : MonoBehaviour
 
     [Header("Otros")]
     private PlayerMovement playerMovement;
+    private RaycastPlayer raycastPlayer;
     void Start()
     {
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        raycastPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<RaycastPlayer>();
         invocarCubos = true;
         //InvocarCubos();
     }
@@ -117,8 +120,10 @@ public class DuoLesson : MonoBehaviour
     {
         canvasLeccion.alpha = 0;
         canvasLeccion.interactable = false;
+        canvasLinterna.alpha = 1;
         playerMovement.movimientoActivo = true;
         Cursor.lockState = CursorLockMode.Locked;
+        raycastPlayer.leccionAbierta = false;
         Cursor.visible = false;
     }
     public void ResetPalabras()
@@ -151,13 +156,13 @@ public class DuoLesson : MonoBehaviour
     }
     public void Boton_Comprobar()
     {
-        if(/*idIntroducido == idAns[actLevel]*/ fraseIntroducida == idAns[actLevel])
+        if(fraseIntroducida == idAns[actLevel])
         {
             Debug.Log("Continuar leccion" + actLevel);
             esCorrecto = true;
             Comprobar();
         }
-        else if(/*idIntroducido != idAns[actLevel]*/ fraseIntroducida == idAns[actLevel])
+        else if(fraseIntroducida != idAns[actLevel])
         {
             esIncorrecto = true;
             Comprobar();
@@ -206,7 +211,7 @@ public class DuoLesson : MonoBehaviour
     }
     private void Cargando()
     {
-        if(tiempoCargando < 3.5f && cargando)
+        if(tiempoCargando < tiempoDeCarga && cargando)
         {
             panelCargando.SetActive(true);
             tiempoCargando += Time.deltaTime;
@@ -214,7 +219,7 @@ public class DuoLesson : MonoBehaviour
             resetButton.interactable = false;
             comprobarButton.interactable = false;
         }
-        else if (tiempoCargando >= 3.5f && cargando)
+        else if (tiempoCargando >= tiempoDeCarga && cargando)
         {
             panelCargando.SetActive(false);
             tiempoCargando = 0;

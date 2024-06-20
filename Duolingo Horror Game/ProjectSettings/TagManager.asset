@@ -10,6 +10,9 @@ TagManager:
   - Canvas
   - Duolingo
   - Puerta_duo
+  - Pilas
+  - Disparo
+  - DuoCenter
   layers:
   - Default
   - TransparentFX

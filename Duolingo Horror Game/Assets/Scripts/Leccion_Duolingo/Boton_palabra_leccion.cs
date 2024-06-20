@@ -12,7 +12,6 @@ public class Boton_palabra_leccion : MonoBehaviour
     private float timeElapsed = 0, lerpDuration = 0.5f;
     public List<GameObject> palabrasIntroduccidas = new List<GameObject>();
     public Vector2 posicionInicial;
-
     void Start()
     {
         duoLesson = GameObject.FindGameObjectWithTag("Canvas").GetComponent<DuoLesson>();

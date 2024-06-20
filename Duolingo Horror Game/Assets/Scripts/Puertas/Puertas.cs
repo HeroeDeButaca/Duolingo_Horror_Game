@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Puertas : MonoBehaviour
 {
-    public bool doorOpen;
+    public bool doorOpen, isInteractable = true;
     public float doorOpenAngle = 95, doorCloseAngle = 0, smooth = 3;
     Quaternion targetRotation, targetRotation2;
 
     public void ChangeDoorState()
     {
-        doorOpen = !doorOpen;
+        if (isInteractable)
+        {
+            doorOpen = !doorOpen;
+        }
     }
     void Update()
     {

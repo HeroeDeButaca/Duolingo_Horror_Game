@@ -7,12 +7,12 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Opciones de Personaje")]
     private CharacterController characterController;
-    [SerializeField] private float walkSpeed = 3;
-    [SerializeField] private float runSpeed = 5;
+    [SerializeField] private float walkSpeed = 3, lowWalkSpeed = 2;
+    [SerializeField] private float runSpeed = 5, lowRunSpeed = 3.5f;
     [SerializeField] private float gravity = 20;
     private Vector3 move = Vector3.zero;
     [SerializeField]private Vector3 spawnPoint;
-    [HideInInspector]public bool movimientoActivo = true;
+    [HideInInspector] public bool movimientoActivo = false, GoSpawn = false, rotateJumpscare = false;
 
     [Header("Opciones de Camara")]
     public Camera cam;
@@ -36,11 +36,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Image staminaProgressUI = null, staminaProgressUI2 = null;
     [SerializeField] private CanvasGroup sliderCanvasGroup = null;
 
+    [Header("Otros")]
+    private Transform duoTransform;
+
     void Start()
     {
         sliderCanvasGroup.alpha = 0;
         characterController = GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked;
+        duoTransform = GameObject.FindGameObjectWithTag("DuoCenter").GetComponent<Transform>();
+        movimientoActivo = false;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
     void Update()
     {
@@ -54,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
             transform.Rotate(0, h_mouse, 0);
 
             move = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-            if (Input.GetKey(KeyCode.LeftShift) && playerStamina > 0 && hasRegenerated)
+            if (Input.GetKey(KeyCode.LeftShift) && playerStamina > 0 && hasRegenerated && move.z > 0.01 || Input.GetKey(KeyCode.LeftShift) && playerStamina > 0 && hasRegenerated && move.z < 0.01)
             {
                 move = transform.TransformDirection(move) * runSpeed;
                 weAreSprinting = true;
@@ -65,10 +70,34 @@ public class PlayerMovement : MonoBehaviour
                 move = transform.TransformDirection(move) * walkSpeed;
                 weAreSprinting = false;
             }
-            move.y -= gravity * Time.deltaTime;
-            characterController.Move(move * Time.deltaTime);
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                walkSpeed = lowWalkSpeed;
+                runSpeed = lowRunSpeed;
+            }
+            else if (Input.GetKeyUp(KeyCode.S))
+            {
+                walkSpeed = 3;
+                runSpeed = 5;
+            }
         }
+        move.y -= gravity * Time.deltaTime;
+        characterController.Move(move * Time.deltaTime);
         Stamina();
+        if (GoSpawn)
+        {
+            GoToSpawnPoint();
+        }
+        // Cerrar juego (quitar)
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Application.Quit();
+        }
+        if (rotateJumpscare)
+        {
+            cam.transform.LookAt(duoTransform.position);
+        }
     }
     private void Stamina()
     {
@@ -117,6 +146,28 @@ public class PlayerMovement : MonoBehaviour
     public void GoToSpawnPoint()
     {
         Debug.Log("Jugador va al Spawn");
+        gameObject.GetComponent<Rigidbody>().useGravity = false;
+        characterController.enabled = false;
         transform.position = spawnPoint;
+        if(transform.position == spawnPoint)
+        {
+            gameObject.GetComponent<Rigidbody>().useGravity = true;
+            characterController.enabled = true;
+            GoSpawn = false;
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Duolingo"))
+        {
+            movimientoActivo = false;
+            rotateJumpscare = true;
+            characterController.radius = 1.15f;
+            this.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            move = Vector3.zero;
+            gravity = 0;
+            this.gameObject.GetComponent<Rigidbody>().useGravity = false;
+            this.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        }
     }
 }
