@@ -13,6 +13,8 @@ TagManager:
   - Pilas
   - Disparo
   - DuoCenter
+  - Audio
+  - CartaDuo
   layers:
   - Default
   - TransparentFX

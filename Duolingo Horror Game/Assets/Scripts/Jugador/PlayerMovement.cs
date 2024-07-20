@@ -7,12 +7,14 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Opciones de Personaje")]
     private CharacterController characterController;
+    private Rigidbody rb;
     [SerializeField] private float walkSpeed = 3, lowWalkSpeed = 2;
     [SerializeField] private float runSpeed = 5, lowRunSpeed = 3.5f;
     [SerializeField] private float gravity = 20;
     private Vector3 move = Vector3.zero;
     [SerializeField]private Vector3 spawnPoint;
     [HideInInspector] public bool movimientoActivo = false, GoSpawn = false, rotateJumpscare = false;
+    [SerializeField] private bool pasoMadera, pasoEstacion, pasoOficina, pasoReto;
 
     [Header("Opciones de Camara")]
     public Camera cam;
@@ -38,11 +40,14 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Otros")]
     private Transform duoTransform;
+    private AudioManager audioManager;
 
     void Start()
     {
         sliderCanvasGroup.alpha = 0;
         characterController = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         duoTransform = GameObject.FindGameObjectWithTag("DuoCenter").GetComponent<Transform>();
         movimientoActivo = false;
         //Cursor.lockState = CursorLockMode.Locked;
@@ -63,11 +68,43 @@ public class PlayerMovement : MonoBehaviour
             {
                 move = transform.TransformDirection(move) * runSpeed;
                 weAreSprinting = true;
+                if(pasoMadera && !audioManager.audioSteps.isPlaying && move != Vector3.zero && rb.velocity != Vector3.zero)
+                {
+                    Debug.Log("Hace sonido");
+                    if (runSpeed != 3.5f)
+                    {
+                        audioManager.audioSteps.pitch = Random.Range(1.3f, 1.55f);
+                    }
+                    else if (runSpeed == 3.5f)
+                    {
+                        audioManager.audioSteps.pitch = Random.Range(1, 1.2f);
+                    }
+
+                    audioManager.PlaySteps(audioManager.pasosMadera);
+                }
                 Sprinting();
             }
             else
             {
                 move = transform.TransformDirection(move) * walkSpeed;
+                if (pasoMadera && !audioManager.audioSteps.isPlaying && move != Vector3.zero && rb.velocity != Vector3.zero)
+                {
+                    Debug.Log("Hace sonido");
+                    if(walkSpeed != 2)
+                    {
+                        audioManager.audioSteps.pitch = Random.Range(1, 1.25f);
+                    }
+                    else if(walkSpeed == 2)
+                    {
+                        audioManager.audioSteps.pitch = Random.Range(0.8f, 0.9f);
+                    }
+                    
+                    audioManager.PlaySteps(audioManager.pasosMadera);
+                }
+                else if(audioManager.audioSteps.isPlaying && Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+                {
+                    audioManager.audioSteps.Stop();
+                }
                 weAreSprinting = false;
             }
 
@@ -88,11 +125,6 @@ public class PlayerMovement : MonoBehaviour
         if (GoSpawn)
         {
             GoToSpawnPoint();
-        }
-        // Cerrar juego (quitar)
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            Application.Quit();
         }
         if (rotateJumpscare)
         {
@@ -146,12 +178,12 @@ public class PlayerMovement : MonoBehaviour
     public void GoToSpawnPoint()
     {
         Debug.Log("Jugador va al Spawn");
-        gameObject.GetComponent<Rigidbody>().useGravity = false;
+        rb.useGravity = false;
         characterController.enabled = false;
         transform.position = spawnPoint;
         if(transform.position == spawnPoint)
         {
-            gameObject.GetComponent<Rigidbody>().useGravity = true;
+            rb.useGravity = true;
             characterController.enabled = true;
             GoSpawn = false;
         }
@@ -163,11 +195,11 @@ public class PlayerMovement : MonoBehaviour
             movimientoActivo = false;
             rotateJumpscare = true;
             characterController.radius = 1.15f;
-            this.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
             move = Vector3.zero;
             gravity = 0;
-            this.gameObject.GetComponent<Rigidbody>().useGravity = false;
-            this.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+            rb.useGravity = false;
+            rb.isKinematic = true;
         }
     }
 }

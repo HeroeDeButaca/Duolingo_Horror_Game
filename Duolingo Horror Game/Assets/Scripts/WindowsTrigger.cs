@@ -43,6 +43,7 @@ public class WindowsTrigger : MonoBehaviour
                 duoGO.GetComponent<Rigidbody>().mass = 1000;
                 duoGO.GetComponent<BoxCollider>().enabled = true;
                 duoGO.GetComponent<NavMeshAgent>().destination = duoTransform.position; // ¿porque puse esto?
+                duoGO.GetComponent<DuoController>().isInside = true;
             }
         }
     }

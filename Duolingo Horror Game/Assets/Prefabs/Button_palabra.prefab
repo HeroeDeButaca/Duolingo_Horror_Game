@@ -147,6 +147,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
+  orden: 0
+  palabraBoton: 
+  reordenar_palabras: 0
+  esRespuesta: 0
+  noCambiar: 0
+  palabrasIntroduccidas: []
+  posicionInicial: {x: 0, y: 0}
 --- !u!1 &5751448461691303716
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,8 +221,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: palabra
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 65506dfcaa4667742bdb926f17baa373, type: 2}
-  m_sharedMaterial: {fileID: -5215806850314014175, guid: 65506dfcaa4667742bdb926f17baa373, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5689817e903dd5447be625d07ba04b1e, type: 2}
+  m_sharedMaterial: {fileID: -8418960379376101437, guid: 5689817e903dd5447be625d07ba04b1e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

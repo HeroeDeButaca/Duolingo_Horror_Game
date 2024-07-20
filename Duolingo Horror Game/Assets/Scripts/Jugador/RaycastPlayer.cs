@@ -8,16 +8,20 @@ public class RaycastPlayer : MonoBehaviour
     public float distancia = 3, distanciaLinterna = 12;
     [SerializeField] private CanvasGroup canvasLeccion, canvasLinterna;
     [SerializeField] private Image Interaccion;
-    [SerializeField] private Sprite vacioSprite, puertaSprite, leccionSprite, linternaSprite;
+    [SerializeField] private Sprite vacioSprite, puertaSprite, leccionSprite, linternaSprite, cartaSprite;
     private PlayerMovement playerMovement;
     [SerializeField] private Linterna linterna;
     [SerializeField] private GameObject prefabParticle, duo;
     private DuoController duoController;
+    private AudioManager audioManager;
+    private GameOver gameOver;
     public bool leccionAbierta;
     void Start()
     {
         duoController = GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        gameOver = GameObject.FindGameObjectWithTag("Canvas").GetComponent<GameOver>();
         leccionAbierta = false;
     }
     void Update()
@@ -25,7 +29,8 @@ public class RaycastPlayer : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, distancia))
         {
-            //Debug.Log(hit.collider.tag);
+            Debug.Log(hit.collider.tag);
+            //Debug.DrawRay()
             if (hit.collider.CompareTag("Puerta"))
             {
                 if (hit.collider.GetComponent<Puertas>().isInteractable)
@@ -62,8 +67,20 @@ public class RaycastPlayer : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     linterna.cargas = linterna.maxCargas;
+                    audioManager.PlaySFX(audioManager.recargaLinterna);
                     Interaccion.sprite = vacioSprite;
                     linterna.CargasBateria();
+                }
+            }
+            else if (hit.transform.CompareTag("CartaDuo"))
+            {
+                Interaccion.sprite = cartaSprite;
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    gameOver.cartaObtenida = true;
+                    Interaccion.sprite = vacioSprite;
+                    hit.collider.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    hit.collider.gameObject.GetComponent<BoxCollider>().enabled = false;
                 }
             }
             else if (hit.collider.CompareTag("Untagged"))

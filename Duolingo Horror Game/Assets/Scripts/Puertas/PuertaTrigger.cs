@@ -31,6 +31,7 @@ public class PuertaTrigger : MonoBehaviour
             if (!puertaVNoInteractable)
             {
                 puerta.doorOpen = false;
+                other.gameObject.GetComponent<DuoController>().isInside = true;
             }
             puerta.isInteractable = true;
         }

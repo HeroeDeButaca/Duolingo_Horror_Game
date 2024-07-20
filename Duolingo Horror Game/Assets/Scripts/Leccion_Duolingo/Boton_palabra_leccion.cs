@@ -83,6 +83,30 @@ public class Boton_palabra_leccion : MonoBehaviour
                         timeElapsed = 0;
                     }
                     break;
+                case 6:
+                    if (esRespuesta && timeElapsed < lerpDuration && !noCambiar)
+                    {
+                        rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, new Vector3(445, -10.5f, 0), timeElapsed / lerpDuration);
+                        timeElapsed += Time.deltaTime;
+                    }
+                    else if (esRespuesta && timeElapsed >= lerpDuration && !noCambiar)
+                    {
+                        noCambiar = true;
+                        timeElapsed = 0;
+                    }
+                    break;
+                case 7:
+                    if (esRespuesta && timeElapsed < lerpDuration && !noCambiar)
+                    {
+                        rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, new Vector3(-355, -109.5f, 0), timeElapsed / lerpDuration);
+                        timeElapsed += Time.deltaTime;
+                    }
+                    else if (esRespuesta && timeElapsed >= lerpDuration && !noCambiar)
+                    {
+                        noCambiar = true;
+                        timeElapsed = 0;
+                    }
+                    break;
             }
         }
         if (reordenar_palabras)

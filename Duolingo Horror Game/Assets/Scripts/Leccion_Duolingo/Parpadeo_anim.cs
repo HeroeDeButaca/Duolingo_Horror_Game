@@ -9,5 +9,7 @@ public class Parpadeo_anim : MonoBehaviour
         animators[1].SetBool("arr_der", true);
         animators[2].SetBool("aba_izq", true);
         animators[3].SetBool("aba_der", true);
+        animators[4].SetBool("brazo_izq", true);
+        animators[5].SetBool("brazo_der", true);
     }
 }

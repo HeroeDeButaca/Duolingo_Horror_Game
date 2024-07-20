@@ -14,8 +14,10 @@ public class Linterna : MonoBehaviour
     public bool canShoot = true, lanzaAtaque = false;
     [SerializeField] private GameObject textoNoBateria, prefabDisparo;
     [SerializeField] private Transform centroAtaque;
+    private AudioManager audioManager;
     void Start()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         noche3 = PlayerPrefs.GetInt("Noche3") == 1 ? true : false;
         if (!noche3)
         {
@@ -73,13 +75,14 @@ public class Linterna : MonoBehaviour
             cargandoAtaque += Time.deltaTime;
             if (luzLinterna.intensity < 22)
             {
-                luzLinterna.intensity += Time.deltaTime * 8;
+                luzLinterna.intensity += Time.deltaTime * 14;
             }
         }
-        if(canShoot & cargandoAtaque >= 1.5f & Input.GetMouseButtonUp(0) & activeLight & cargas > 0)
+        if(canShoot & luzLinterna.intensity >= 22 & Input.GetMouseButtonUp(0) & activeLight & cargas > 0)
         {
             Debug.Log("¡Ataque!");
-            cargandoAtaque = 0;
+            audioManager.PlaySFX(audioManager.ataqueLanzado);
+            //cargandoAtaque = 0;
             bajarIntensity = true;
             lanzaAtaque = true;
             Instantiate(prefabDisparo, centroAtaque.position, centroAtaque.rotation);
@@ -87,18 +90,18 @@ public class Linterna : MonoBehaviour
             CargasBateria();
             
         }
-        else if(cargandoAtaque < 1.5f & Input.GetMouseButtonUp(0) & activeLight & cargas > 0)
+        else if(luzLinterna.intensity < 22 & Input.GetMouseButtonUp(0) & activeLight & cargas > 0)
         {
             Debug.Log("Ataque no cargado");
-            cargandoAtaque = 0;
+            //cargandoAtaque = 0;
             bajarIntensity = true;
         }
 
-        if (luzLinterna.intensity < 10 && bajarIntensity)
+        if (luzLinterna.intensity > 10 && bajarIntensity)
         {
-            luzLinterna.intensity -= Time.deltaTime * 8;
+            luzLinterna.intensity -= Time.deltaTime * 35;
         }
-        else if (luzLinterna.intensity >= 10 && bajarIntensity)
+        else if (luzLinterna.intensity <= 10 && bajarIntensity)
         {
             luzLinterna.intensity = 10;
             bajarIntensity = false;

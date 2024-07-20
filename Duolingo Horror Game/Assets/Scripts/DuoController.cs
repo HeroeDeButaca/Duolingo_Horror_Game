@@ -15,16 +15,19 @@ public class DuoController : MonoBehaviour
     private int duolingoActualSpawn = 10, duolingoPreviusSpawn = 12;
     [SerializeField] private float newDuolingoSpawn, transcurredTime, timeToMove, particleTime, jumpscareTimer = 0, jpsTimer = 0;
     private bool createNewSpawn = false, duoGoSpawn, duolingoDespawned = true, countdownUp = true, jumpscare = false, oneTimeJumpscare = false, movement = false;
-    public bool isClimbing, duoDissapear, oneTimeBool, gameStart;
+    public bool isClimbing, duoDissapear, oneTimeBool, gameStart, isInside;
+    [SerializeField] private bool sueloMadera;
     [SerializeField] private GameObject prefabParticle, duo;
     private DuoLesson duoLesson;
     private GameOver gameOver;
+    private AudioManager audioManager;
     void Start()
     {
         duoTransform = GetComponent<Transform>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         duoLesson = GameObject.FindGameObjectWithTag("Canvas").GetComponent<DuoLesson>();
         gameOver = GameObject.FindGameObjectWithTag("Canvas").GetComponent<GameOver>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         duoNavMesh = GetComponent<NavMeshAgent>();
         duoNavMesh.enabled = false;
         duoAnimator = GetComponent<Animator>();
@@ -33,6 +36,7 @@ public class DuoController : MonoBehaviour
         createNewSpawn = true;
         duoGoSpawn = true;
         gameStart = false;
+        isInside = false;
     }
 
     void Update()
@@ -80,6 +84,14 @@ public class DuoController : MonoBehaviour
         {
             DuolingoJumpscare();
         }
+        if (isInside)
+        {
+            if (sueloMadera && !audioManager.audioStepsDuo.isPlaying)
+            {
+                audioManager.PlayStepsDuo(audioManager.pasosMadera);
+                audioManager.audioStepsDuo.pitch = Random.Range(0.9f, 1);
+            }
+        }
     }
     private void DuolingoSpawn()
     {
@@ -116,6 +128,7 @@ public class DuoController : MonoBehaviour
         else if(particleTime >= 0.98f)
         {
             Destroy(GameObject.Find("DuoDissapear(Clone)"));
+            isInside = false;
             particleTime = 0;
             duoDissapear = false;
             duoNavMesh.enabled = false;
