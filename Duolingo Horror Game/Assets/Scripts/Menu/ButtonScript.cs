@@ -44,7 +44,6 @@ public class ButtonScript : MonoBehaviour
                 {
                     cartasObtenidas[i] = datosJuego.cartasObtenidas[i];
                 }
-                
             }
         }
     }

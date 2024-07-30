@@ -49,7 +49,6 @@ public class Puertas : MonoBehaviour
                 playSFX = false;
                 time = 0;
             }
-            
         }
     }
 }

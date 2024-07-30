@@ -15,6 +15,7 @@ TagManager:
   - DuoCenter
   - Audio
   - CartaDuo
+  - PhantomDuo
   layers:
   - Default
   - TransparentFX

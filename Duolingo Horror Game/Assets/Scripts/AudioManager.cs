@@ -22,7 +22,6 @@ public class AudioManager : MonoBehaviour
     public AudioClip infrasonido;
     public AudioClip abrirPuerta;
     public AudioClip cerrarPuerta;
-
     void Start()
     {
         audioBGM.clip = infrasonido;

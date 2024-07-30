@@ -83,7 +83,6 @@ public class DuoLesson : MonoBehaviour
         gameOver = GameObject.FindGameObjectWithTag("Canvas").GetComponent<GameOver>();
         raycastPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<RaycastPlayer>();
         invocarCubos = false;
-        //InvocarCubos();
     }
 
     void Update()
@@ -97,7 +96,6 @@ public class DuoLesson : MonoBehaviour
             else if (actLevel == 0)
             {
                 barraLeccion.fillAmount = 0;
-                //finLeccion = true;
             }
             else
             {
@@ -233,14 +231,13 @@ public class DuoLesson : MonoBehaviour
                 if(actLevel <= idAns.Length - 1)
                 {
                     invocarCubos = true;
-                    //esCorrecto = false;
-                    //cubosDestruidos = false;
                     cargando = true;
                 }
                 else if(actLevel > idAns.Length - 1)
                 {
                     textoIngles.text = "¡Lección Completada!";
                     GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>().gameStart = false;
+                    GameObject.FindGameObjectWithTag("PhantomDuo").GetComponent<PhantomDuoController>().gameStart = false;
                     if (GameObject.FindGameObjectWithTag("Duolingo").GetComponent<NavMeshAgent>().enabled)
                     {
                         GameObject.FindGameObjectWithTag("Duolingo").GetComponent<NavMeshAgent>().destination = gameObject.transform.position;

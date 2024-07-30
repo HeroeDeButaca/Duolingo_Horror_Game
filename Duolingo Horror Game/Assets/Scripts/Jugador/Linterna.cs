@@ -10,14 +10,29 @@ public class Linterna : MonoBehaviour
     [SerializeField] private RawImage[] imageCargas;
     public int cargas, maxCargas;
     private bool activeLight, noche3, bajarIntensity = false, sube = false;
-    private float cargandoAtaque, t;
+    private float lanAtaCooldown = 0, t;
     public bool canShoot = true, lanzaAtaque = false;
-    [SerializeField] private GameObject textoNoBateria, prefabDisparo;
+    [SerializeField] private GameObject textoNoBateria;
     [SerializeField] private Transform centroAtaque;
     private AudioManager audioManager;
+    [SerializeField] private float distancia = 15;
+    [SerializeField] private Image ataqueLinternaUI;
+    private DuoController duoController;
+
+    // Phantom Duo jumpscare
+    [SerializeField] private CanvasGroup canvasPDjumpscare;
+    [SerializeField] private Transform imageJumpscare;
+    private PlayerMovement playerMovement;
+    private float tImageJumpscare;
+    private bool pdJumpscare = false, audioJump = false;
+    [SerializeField] private GlobalVolumeScript volumeScript;
+    private PhantomDuoController phantomDuo;
     void Start()
     {
+        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        duoController = GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>();
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        phantomDuo = GameObject.FindGameObjectWithTag("PhantomDuo").GetComponent<PhantomDuoController>();
         noche3 = PlayerPrefs.GetInt("Noche3") == 1 ? true : false;
         if (!noche3)
         {
@@ -29,11 +44,45 @@ public class Linterna : MonoBehaviour
             cargas = 5;
             maxCargas = 5;
         }
-        
     }
 
     void Update()
     {
+        RaycastHit hit;
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward), Color.yellow, distancia);
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, distancia))
+        {
+            if(hit.collider.CompareTag("Duolingo") && lanzaAtaque)
+            {
+                duoController.oneTimeBool = true;
+                duoController.duoDissapear = true;
+                duoController.duoNavMesh.enabled = false;
+            }
+            if(hit.collider.CompareTag("PhantomDuo") && activeLight)
+            {
+                playerMovement.quieto = true;
+                playerMovement.movimientoActivo = false;
+                phantomDuo.oneTimeBool = true;
+                activeLight = false;
+                canvasPDjumpscare.alpha = 1;
+                tImageJumpscare = 0;
+                audioJump = false;
+                volumeScript.cambiarVignette(true);
+                phantomDuo.oneTimeBool = true;
+                phantomDuo.pdJumpscare = true;
+            }
+        }
+        if (lanzaAtaque)
+        {
+            if(lanAtaCooldown < 0.1f)
+            {
+                lanAtaCooldown += Time.deltaTime;
+            }
+            else if(lanAtaCooldown >= 0.1f)
+            {
+                lanzaAtaque = false;
+            }
+        }
         if (Input.GetKeyDown(KeyCode.Q))
         {
             activeLight = !activeLight;
@@ -72,7 +121,6 @@ public class Linterna : MonoBehaviour
         if(canShoot & Input.GetMouseButton(0) & activeLight & cargas > 0)
         {
             Debug.Log("Cargando ataque linterna...");
-            cargandoAtaque += Time.deltaTime;
             if (luzLinterna.intensity < 22)
             {
                 luzLinterna.intensity += Time.deltaTime * 14;
@@ -82,10 +130,9 @@ public class Linterna : MonoBehaviour
         {
             Debug.Log("¡Ataque!");
             audioManager.PlaySFX(audioManager.ataqueLanzado);
-            //cargandoAtaque = 0;
+            lanAtaCooldown = 0;
             bajarIntensity = true;
             lanzaAtaque = true;
-            Instantiate(prefabDisparo, centroAtaque.position, centroAtaque.rotation);
             cargas -= 1;
             CargasBateria();
             
@@ -93,7 +140,6 @@ public class Linterna : MonoBehaviour
         else if(luzLinterna.intensity < 22 & Input.GetMouseButtonUp(0) & activeLight & cargas > 0)
         {
             Debug.Log("Ataque no cargado");
-            //cargandoAtaque = 0;
             bajarIntensity = true;
         }
 
@@ -105,6 +151,19 @@ public class Linterna : MonoBehaviour
         {
             luzLinterna.intensity = 10;
             bajarIntensity = false;
+        }
+        
+        if(luzLinterna.intensity <= 10 && ataqueLinternaUI.fillAmount == 0)
+        {
+            ataqueLinternaUI.fillAmount = 0;
+        }
+        else if(luzLinterna.intensity >= 22 && ataqueLinternaUI.fillAmount == 1)
+        {
+            ataqueLinternaUI.fillAmount = 1;
+        }
+        else
+        {
+            ataqueLinternaUI.fillAmount = (luzLinterna.intensity - 10) / 12;
         }
     }
     public void CargasBateria()

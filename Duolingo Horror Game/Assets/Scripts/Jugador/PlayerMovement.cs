@@ -8,12 +8,13 @@ public class PlayerMovement : MonoBehaviour
     [Header("Opciones de Personaje")]
     private CharacterController characterController;
     private Rigidbody rb;
+    [SerializeField] private BoxCollider apartaDuo;
     [SerializeField] private float walkSpeed = 3, lowWalkSpeed = 2;
     [SerializeField] private float runSpeed = 5, lowRunSpeed = 3.5f;
-    [SerializeField] private float gravity = 20;
+    [SerializeField] private float gravity = 20, quietoCD = 0;
     private Vector3 move = Vector3.zero;
     [SerializeField]private Vector3 spawnPoint;
-    [HideInInspector] public bool movimientoActivo = false, GoSpawn = false, rotateJumpscare = false;
+    [HideInInspector] public bool movimientoActivo = false, GoSpawn = false, rotateJumpscare = false, quieto = false;
     [SerializeField] private bool pasoMadera, pasoEstacion, pasoOficina, pasoReto;
 
     [Header("Opciones de Camara")]
@@ -41,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Otros")]
     private Transform duoTransform;
     private AudioManager audioManager;
+    [SerializeField] private GlobalVolumeScript volumeScript;
 
     void Start()
     {
@@ -130,6 +132,11 @@ public class PlayerMovement : MonoBehaviour
         {
             cam.transform.LookAt(duoTransform.position);
         }
+        if (quieto)
+        {
+            Quieto();
+            move = Vector3.zero;
+        }
     }
     private void Stamina()
     {
@@ -195,11 +202,26 @@ public class PlayerMovement : MonoBehaviour
             movimientoActivo = false;
             rotateJumpscare = true;
             characterController.radius = 1.15f;
+            //apartaDuo.enabled = true;
             rb.velocity = Vector3.zero;
             move = Vector3.zero;
             gravity = 0;
             rb.useGravity = false;
             rb.isKinematic = true;
+        }
+    }
+    private void Quieto()
+    {
+        if (quietoCD < 7.5f)
+        {
+            quietoCD += Time.deltaTime;
+        }
+        else if (quietoCD >= 7.5f)
+        {
+            quieto = false;
+            quietoCD = 0;
+            volumeScript.cambiarVignette(false);
+            movimientoActivo = true;
         }
     }
 }

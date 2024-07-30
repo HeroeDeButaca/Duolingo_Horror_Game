@@ -12,13 +12,11 @@ public class RaycastPlayer : MonoBehaviour
     private PlayerMovement playerMovement;
     [SerializeField] private Linterna linterna;
     [SerializeField] private GameObject prefabParticle, duo;
-    private DuoController duoController;
     private AudioManager audioManager;
     private GameOver gameOver;
     public bool leccionAbierta;
     void Start()
     {
-        duoController = GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>();
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
         gameOver = GameObject.FindGameObjectWithTag("Canvas").GetComponent<GameOver>();
@@ -27,10 +25,10 @@ public class RaycastPlayer : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward), Color.green, distancia);
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, distancia))
         {
             Debug.Log(hit.collider.tag);
-            //Debug.DrawRay()
             if (hit.collider.CompareTag("Puerta"))
             {
                 if (hit.collider.GetComponent<Puertas>().isInteractable)
@@ -72,7 +70,7 @@ public class RaycastPlayer : MonoBehaviour
                     linterna.CargasBateria();
                 }
             }
-            else if (hit.transform.CompareTag("CartaDuo"))
+            else if (hit.collider.CompareTag("CartaDuo"))
             {
                 Interaccion.sprite = cartaSprite;
                 if (Input.GetKeyDown(KeyCode.E))

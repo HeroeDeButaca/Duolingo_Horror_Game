@@ -7,7 +7,7 @@ public class DuoController : MonoBehaviour
 {
     private Transform playerTransform;
     public Transform duoTransform;
-    private NavMeshAgent duoNavMesh;
+    public NavMeshAgent duoNavMesh;
     private Animator duoAnimator;
     public Transform duoHidedTransform;
     [SerializeField] private Transform[] duolingoSpawns;
@@ -21,6 +21,7 @@ public class DuoController : MonoBehaviour
     private DuoLesson duoLesson;
     private GameOver gameOver;
     private AudioManager audioManager;
+    [SerializeField] private BoxCollider boxCollider;
     void Start()
     {
         duoTransform = GetComponent<Transform>();
@@ -177,16 +178,10 @@ public class DuoController : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Disparo"))
-        {
-            Debug.Log("Disparo recibido");
-            oneTimeBool = true;
-            duoDissapear = true;
-            duoNavMesh.enabled = false;
-        }
-        else if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("Colision con Player");
+            //boxCollider.enabled = true;
             jumpscare = true;
             duoLesson.canvasLeccion.alpha = 0;
             duoLesson.canvasLeccion.blocksRaycasts = false;

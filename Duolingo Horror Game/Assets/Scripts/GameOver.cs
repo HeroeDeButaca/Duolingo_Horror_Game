@@ -25,6 +25,7 @@ public class GameOver : MonoBehaviour
     [SerializeField] private TMP_Text textoPuntos, numNocheActual, segundos;
     private PlayerMovement playerMovement;
     private DuoController duoController;
+    private PhantomDuoController phantomDuo;
     [SerializeField] private GameObject linterna;
     [SerializeField] private GameObject[] cartasDuo;
     [SerializeField] private Button[] botonNoches;
@@ -34,6 +35,7 @@ public class GameOver : MonoBehaviour
     {
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
         duoController = GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>();
+        phantomDuo = GameObject.FindGameObjectWithTag("PhantomDuo").GetComponent<PhantomDuoController>();
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         images[1].sprite = sprite[0];
         nocheSeleccionada = 0;
@@ -103,6 +105,10 @@ public class GameOver : MonoBehaviour
                 playerMovement.movimientoActivo = true;
                 linterna.SetActive(true);
                 duoController.gameStart = true;
+                if(nocheSeleccionada >= 2)
+                {
+                    phantomDuo.gameStart = true;
+                }
                 moverCamara = false;
             }
         }
@@ -262,7 +268,14 @@ public class GameOver : MonoBehaviour
     public void ResetOSalirLeccion(int escenaNueva)
     {
         nochesSuperadas[nocheSeleccionada] = true;
-        cartasObtenidas[nocheSeleccionada] = cartaObtenida;
+        if (cartasObtenidas[nocheSeleccionada])
+        {
+            cartasObtenidas[nocheSeleccionada] = true;
+        }
+        else if (!cartasObtenidas[nocheSeleccionada])
+        {
+            cartasObtenidas[nocheSeleccionada] = cartaObtenida;
+        }
         ponerCanvasNegro = true;
         t = 0;
         tES = 0;
