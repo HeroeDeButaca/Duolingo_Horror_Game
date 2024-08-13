@@ -12,7 +12,7 @@ public class Linterna : MonoBehaviour
     private bool activeLight, noche3, bajarIntensity = false, sube = false;
     private float lanAtaCooldown = 0, t;
     public bool canShoot = true, lanzaAtaque = false;
-    [SerializeField] private GameObject textoNoBateria;
+    [SerializeField] private GameObject textoNoBateria, textoNoBateria2;
     [SerializeField] private Transform centroAtaque;
     private AudioManager audioManager;
     [SerializeField] private float distancia = 15;
@@ -33,7 +33,7 @@ public class Linterna : MonoBehaviour
         duoController = GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>();
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         phantomDuo = GameObject.FindGameObjectWithTag("PhantomDuo").GetComponent<PhantomDuoController>();
-        noche3 = PlayerPrefs.GetInt("Noche3") == 1 ? true : false;
+        noche3 = GameObject.FindGameObjectWithTag("Canvas").GetComponent<GameOver>().nocheSeleccionada == 2 ? true : false;
         if (!noche3)
         {
             cargas = 3;
@@ -43,6 +43,7 @@ public class Linterna : MonoBehaviour
         {
             cargas = 5;
             maxCargas = 5;
+            ataqueLinternaUI = GameObject.FindGameObjectWithTag("SuperAtaque").GetComponent<Image>();
         }
     }
 
@@ -94,18 +95,20 @@ public class Linterna : MonoBehaviour
         else if (!activeLight)
         {
             luzLinterna.enabled = false;
+            if(luzLinterna.intensity > 10)
+            {
+                bajarIntensity = true;
+            }
         }
         if(cargas == 0 && textoNoBateria.activeSelf)
         {
             textoNoBateria.GetComponent<TMP_Text>().color = new Vector4(1, 1, 1, Mathf.Lerp(1, 0, t));
             if (sube)
             {
-                Debug.Log("Sube alpha");
                 t -= 0.6f * Time.deltaTime;
             }
             else if (!sube)
             {
-                Debug.Log("Baja alpha");
                 t += 0.6f * Time.deltaTime;
             }
             if(textoNoBateria.GetComponent<TMP_Text>().color.a == 1)
@@ -120,7 +123,6 @@ public class Linterna : MonoBehaviour
         // Ataque linterna
         if(canShoot & Input.GetMouseButton(0) & activeLight & cargas > 0)
         {
-            Debug.Log("Cargando ataque linterna...");
             if (luzLinterna.intensity < 22)
             {
                 luzLinterna.intensity += Time.deltaTime * 14;
@@ -128,7 +130,6 @@ public class Linterna : MonoBehaviour
         }
         if(canShoot & luzLinterna.intensity >= 22 & Input.GetMouseButtonUp(0) & activeLight & cargas > 0)
         {
-            Debug.Log("¡Ataque!");
             audioManager.PlaySFX(audioManager.ataqueLanzado);
             lanAtaCooldown = 0;
             bajarIntensity = true;
@@ -139,7 +140,6 @@ public class Linterna : MonoBehaviour
         }
         else if(luzLinterna.intensity < 22 & Input.GetMouseButtonUp(0) & activeLight & cargas > 0)
         {
-            Debug.Log("Ataque no cargado");
             bajarIntensity = true;
         }
 
@@ -203,52 +203,52 @@ public class Linterna : MonoBehaviour
             switch (cargas)
             {
                 case 0:
-                    imageCargas[0].color = new Vector4(1, 1, 1, 0);
-                    imageCargas[1].color = new Vector4(1, 1, 1, 0);
-                    imageCargas[2].color = new Vector4(1, 1, 1, 0);
                     imageCargas[3].color = new Vector4(1, 1, 1, 0);
                     imageCargas[4].color = new Vector4(1, 1, 1, 0);
-                    textoNoBateria.SetActive(true);
+                    imageCargas[5].color = new Vector4(1, 1, 1, 0);
+                    imageCargas[6].color = new Vector4(1, 1, 1, 0);
+                    imageCargas[7].color = new Vector4(1, 1, 1, 0);
+                    textoNoBateria2.SetActive(true);
                     break;
                 case 1:
-                    imageCargas[0].color = new Vector4(1, 1, 1, 0.2f);
-                    imageCargas[1].color = new Vector4(1, 1, 1, 0);
-                    imageCargas[2].color = new Vector4(1, 1, 1, 0);
-                    imageCargas[3].color = new Vector4(1, 1, 1, 0);
+                    imageCargas[3].color = new Vector4(1, 1, 1, 0.2f);
                     imageCargas[4].color = new Vector4(1, 1, 1, 0);
-                    textoNoBateria.SetActive(false);
+                    imageCargas[5].color = new Vector4(1, 1, 1, 0);
+                    imageCargas[6].color = new Vector4(1, 1, 1, 0);
+                    imageCargas[7].color = new Vector4(1, 1, 1, 0);
+                    textoNoBateria2.SetActive(false);
                     break;
                 case 2:
-                    imageCargas[0].color = new Vector4(1, 1, 1, 0.2f);
-                    imageCargas[1].color = new Vector4(1, 1, 1, 0.4f);
-                    imageCargas[2].color = new Vector4(1, 1, 1, 0);
-                    imageCargas[3].color = new Vector4(1, 1, 1, 0);
-                    imageCargas[4].color = new Vector4(1, 1, 1, 0);
-                    textoNoBateria.SetActive(false);
+                    imageCargas[3].color = new Vector4(1, 1, 1, 0.2f);
+                    imageCargas[4].color = new Vector4(1, 1, 1, 0.4f);
+                    imageCargas[5].color = new Vector4(1, 1, 1, 0);
+                    imageCargas[6].color = new Vector4(1, 1, 1, 0);
+                    imageCargas[7].color = new Vector4(1, 1, 1, 0);
+                    textoNoBateria2.SetActive(false);
                     break;
                 case 3:
-                    imageCargas[0].color = new Vector4(1, 1, 1, 0.2f);
-                    imageCargas[1].color = new Vector4(1, 1, 1, 0.4f);
-                    imageCargas[2].color = new Vector4(1, 1, 1, 0.6f);
-                    imageCargas[3].color = new Vector4(1, 1, 1, 0);
-                    imageCargas[4].color = new Vector4(1, 1, 1, 0);
-                    textoNoBateria.SetActive(false);
+                    imageCargas[3].color = new Vector4(1, 1, 1, 0.2f);
+                    imageCargas[4].color = new Vector4(1, 1, 1, 0.4f);
+                    imageCargas[5].color = new Vector4(1, 1, 1, 0.6f);
+                    imageCargas[6].color = new Vector4(1, 1, 1, 0);
+                    imageCargas[7].color = new Vector4(1, 1, 1, 0);
+                    textoNoBateria2.SetActive(false);
                     break;
                 case 4:
-                    imageCargas[0].color = new Vector4(1, 1, 1, 0.2f);
-                    imageCargas[1].color = new Vector4(1, 1, 1, 0.4f);
-                    imageCargas[2].color = new Vector4(1, 1, 1, 0.6f);
-                    imageCargas[3].color = new Vector4(1, 1, 1, 0.8f);
-                    imageCargas[4].color = new Vector4(1, 1, 1, 0);
-                    textoNoBateria.SetActive(false);
+                    imageCargas[3].color = new Vector4(1, 1, 1, 0.2f);
+                    imageCargas[4].color = new Vector4(1, 1, 1, 0.4f);
+                    imageCargas[5].color = new Vector4(1, 1, 1, 0.6f);
+                    imageCargas[6].color = new Vector4(1, 1, 1, 0.8f);
+                    imageCargas[7].color = new Vector4(1, 1, 1, 0);
+                    textoNoBateria2.SetActive(false);
                     break;
                 case 5:
-                    imageCargas[0].color = new Vector4(1, 1, 1, 0.2f);
-                    imageCargas[1].color = new Vector4(1, 1, 1, 0.4f);
-                    imageCargas[2].color = new Vector4(1, 1, 1, 0.6f);
-                    imageCargas[3].color = new Vector4(1, 1, 1, 0.8f);
-                    imageCargas[4].color = new Vector4(1, 1, 1, 1);
-                    textoNoBateria.SetActive(false);
+                    imageCargas[3].color = new Vector4(1, 1, 1, 0.2f);
+                    imageCargas[4].color = new Vector4(1, 1, 1, 0.4f);
+                    imageCargas[5].color = new Vector4(1, 1, 1, 0.6f);
+                    imageCargas[6].color = new Vector4(1, 1, 1, 0.8f);
+                    imageCargas[7].color = new Vector4(1, 1, 1, 1);
+                    textoNoBateria2.SetActive(false);
                     break;
             }
         }

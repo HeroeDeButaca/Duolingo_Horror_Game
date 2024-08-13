@@ -31,6 +31,7 @@ public class GameOver : MonoBehaviour
     [SerializeField] private Button[] botonNoches;
     [SerializeField] private VideoPlayer videoPlayer;
     private AudioManager audioManager;
+    [SerializeField] private Notificaciones notifications;
     void Start()
     {
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
@@ -57,6 +58,12 @@ public class GameOver : MonoBehaviour
     }
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape) && canvasGroups[2].alpha == 1)
+        {
+            ponerCanvasNegro = true;
+            canvasGroups[2].interactable = false;
+            canvasGroups[2].blocksRaycasts = false;
+        }
         if (canvasGroups[0].alpha != 0 && quitarCanvasNegro)
         {
             canvasGroups[0].alpha = Mathf.Lerp(1, 0, t);
@@ -101,13 +108,25 @@ public class GameOver : MonoBehaviour
             else if(canvasGroups[2].alpha <= 0)
             {
                 camaraTransf.localPosition = new Vector3(0, 0.6f, 0);
-                canvasGroups[3].alpha = 1;
+                if(nocheSeleccionada != 2)
+                {
+                    canvasGroups[3].alpha = 1;
+                }
+                else if(nocheSeleccionada == 2)
+                {
+                    canvasGroups[7].alpha = 1;
+                }
                 playerMovement.movimientoActivo = true;
                 linterna.SetActive(true);
                 duoController.gameStart = true;
-                if(nocheSeleccionada >= 2)
+                if(nocheSeleccionada >= 1)
                 {
                     phantomDuo.gameStart = true;
+                    notifications.gameStart = true;
+                    if(nocheSeleccionada == 2)
+                    {
+                        duoController.ChangeToSuper();
+                    }
                 }
                 moverCamara = false;
             }

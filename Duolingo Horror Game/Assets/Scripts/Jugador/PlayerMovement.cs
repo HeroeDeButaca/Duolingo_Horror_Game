@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float walkSpeed = 3, lowWalkSpeed = 2;
     [SerializeField] private float runSpeed = 5, lowRunSpeed = 3.5f;
     [SerializeField] private float gravity = 20, quietoCD = 0;
-    private Vector3 move = Vector3.zero;
+    public Vector3 move = Vector3.zero;
     [SerializeField]private Vector3 spawnPoint;
     [HideInInspector] public bool movimientoActivo = false, GoSpawn = false, rotateJumpscare = false, quieto = false;
     [SerializeField] private bool pasoMadera, pasoEstacion, pasoOficina, pasoReto;
@@ -40,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private CanvasGroup sliderCanvasGroup = null;
 
     [Header("Otros")]
-    private Transform duoTransform;
+    [SerializeField]private Transform duoTransform, camTransform;
     private AudioManager audioManager;
     [SerializeField] private GlobalVolumeScript volumeScript;
 
@@ -130,7 +130,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (rotateJumpscare)
         {
-            cam.transform.LookAt(duoTransform.position);
+            camTransform.LookAt(duoTransform.position);
         }
         if (quieto)
         {
@@ -184,7 +184,6 @@ public class PlayerMovement : MonoBehaviour
     }
     public void GoToSpawnPoint()
     {
-        Debug.Log("Jugador va al Spawn");
         rb.useGravity = false;
         characterController.enabled = false;
         transform.position = spawnPoint;

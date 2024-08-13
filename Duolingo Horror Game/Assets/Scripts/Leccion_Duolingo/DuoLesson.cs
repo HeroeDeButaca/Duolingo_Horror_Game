@@ -26,6 +26,16 @@ public class DuoLesson : MonoBehaviour
         {"have", "only", "a", "please", "to", "You", "wait"},
         {"esta", "tu", "termines", "este", "lección", "favor", "No"}
     };
+    private string[,] stringLeccion3 = new string[7, 9]
+    {
+        {"Hola","Tú","Soy","Era","Yo","SuperDuo","Ahora","no", "si" },
+        {"before", "more", "after", "than", "not", "I'm", "then", "annoying", "am" },
+        {"más", "veloz", "menos", "Y", "lento", "Yo", "puede", "no", "antes" },
+        {"I", "of", "stop", "never", "you", "chasing", "will", "the", "continue" },
+        {"ellos", "Tú", "para", "por", "la", "problema", "lección", "el", "Deja" },
+        {"around", "here", "You", "Look", "you", "me", "I'm", "ham", "my" },
+        {"you", "let", "I", "lesson", "never", "finish", "this", "to", "will" }
+    };
     private string[] stringIngles;
     private string[] stringIngles1 =
     {
@@ -44,17 +54,28 @@ public class DuoLesson : MonoBehaviour
         "Solo tienes que esperar",
         "Don't finish this lesson!"
     };
+    private string[] stringIngles3 =
+    {
+        "I'm SuperDuo!",
+        "Estoy más molesto que antes",
+        "And more faster",
+        "Nunca pararé de perseguirte",
+        "Leave the lesson",
+        "Mira a tu alrededor, estoy ahí",
+        "No dejaré que termines la lección"
+    };
     private string[] idAns;
     private string[] idAns1 = {"Hola me llamo Duo ", "Me gustan los conejos ", "Yo como conejos ", "Tu comes conejos ", "Me gusta comer humanos también "};
     private string[] idAns2 = { "Let's continue with yesterday's talk ", "A ti te gusta comer humanos ", "Tenéis muy buen sabor ", "Dejate comer por mi por favor ", "You only have to wait ", "No termines esta lección "};
+    private string[] idAns3 = { "Soy SuperDuo ", "I'm more annoying than before ", "Y más veloz ", "I will never stop of chasing you ", "Deja la lección ", "Look around you I'm here ", "I will never let you to finish this lesson " };
 
     public string idIntroducido, fraseIntroducida;
     [SerializeField] private int actLevel = 0, erroresCometidos = 0;
     private bool esCorrecto = false, esIncorrecto = false, cubosDestruidos, invocarCubos = false, empezarLeccion = false;
 
     [Header("Canvas")]
-    public CanvasGroup canvasLeccion, canvasLinterna;
-    [SerializeField] private TMP_Text textoIngles, textoMinutos, textoSegundos, textoErrores;
+    public CanvasGroup canvasLeccion, canvasLinterna, canvasSuperLinterna;
+    [SerializeField] private TMP_Text textoIngles, textoMinutos, textoSegundos, textoErrores, textoCargando;
     public int palabrasIntroducidas, palabrasMax;
     [SerializeField] private Image barraLeccion;
     [SerializeField] private GameObject panelCargando, leccionCompletada, lineasPalabras, finNivel;
@@ -154,6 +175,14 @@ public class DuoLesson : MonoBehaviour
                         cubosEnPantalla[i].GetComponent<RectTransform>().localPosition = new Vector2(372.5f, -221);
                         cubosEnPantalla[i].GetComponent<Boton_palabra_leccion>().posicionInicial = new Vector2(372.5f, -221);
                         break;
+                    case 7:
+                        cubosEnPantalla[i].GetComponent<RectTransform>().localPosition = new Vector2(522.5f, -221);
+                        cubosEnPantalla[i].GetComponent<Boton_palabra_leccion>().posicionInicial = new Vector2(522.5f, -221);
+                        break;
+                    case 8:
+                        cubosEnPantalla[i].GetComponent<RectTransform>().localPosition = new Vector2(-514.5f, -320);
+                        cubosEnPantalla[i].GetComponent<Boton_palabra_leccion>().posicionInicial = new Vector2(-514.5f, -320);
+                        break;
                 }
                 cubosEnPantalla[i].GetComponent<Boton_palabra_leccion>().id = i;
                 cubosEnPantalla[i].GetComponent<Boton_palabra_leccion>().palabraBoton = stringLeccion[actLevel, i];
@@ -168,7 +197,14 @@ public class DuoLesson : MonoBehaviour
     {
         canvasLeccion.alpha = 0;
         canvasLeccion.interactable = false;
-        canvasLinterna.alpha = 1;
+        if(gameOver.nocheSeleccionada < 2)
+        {
+            canvasLinterna.alpha = 1;
+        }
+        else if(gameOver.nocheSeleccionada >= 2)
+        {
+            canvasSuperLinterna.alpha = 1;
+        }
         playerMovement.movimientoActivo = true;
         Cursor.lockState = CursorLockMode.Locked;
         raycastPlayer.leccionAbierta = false;
@@ -231,6 +267,7 @@ public class DuoLesson : MonoBehaviour
                 if(actLevel <= idAns.Length - 1)
                 {
                     invocarCubos = true;
+                    tiempoDeCarga = 2f;
                     cargando = true;
                 }
                 else if(actLevel > idAns.Length - 1)
@@ -273,7 +310,6 @@ public class DuoLesson : MonoBehaviour
         {
             panelCargando.SetActive(true);
             tiempoCargando += Time.deltaTime;
-            Debug.Log("Cargando...");
             resetButton.interactable = false;
             comprobarButton.interactable = false;
         }
@@ -284,6 +320,7 @@ public class DuoLesson : MonoBehaviour
             cargando = false;
             resetButton.interactable = true;
             comprobarButton.interactable = true;
+            textoCargando.text = "Cargando...";
         }
     }
     public void finNoche()
@@ -332,8 +369,22 @@ public class DuoLesson : MonoBehaviour
                 idAns = idAns2;
                 palabrasMax = 7;
                 break;
+            case 2:
+                stringLeccion = new string[7, 9];
+                stringLeccion = stringLeccion3;
+                stringIngles = stringIngles3;
+                idAns = idAns3;
+                palabrasMax = 9;
+                break;
         }
         empezarLeccion = true;
         invocarCubos = true;
+    }
+    public void activateNotificacion()
+    {
+        tiempoCargando = 0;
+        tiempoDeCarga = Random.Range(10, 20);
+        cargando = true;
+        textoCargando.text = "¡No uses WhatsApp!";
     }
 }

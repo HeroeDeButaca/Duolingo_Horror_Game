@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class RaycastPlayer : MonoBehaviour
 {
     public float distancia = 3, distanciaLinterna = 12;
-    [SerializeField] private CanvasGroup canvasLeccion, canvasLinterna;
+    [SerializeField] private CanvasGroup canvasLeccion, canvasLinterna, canvasSuperLinterna;
     [SerializeField] private Image Interaccion;
     [SerializeField] private Sprite vacioSprite, puertaSprite, leccionSprite, linternaSprite, cartaSprite;
     private PlayerMovement playerMovement;
@@ -51,12 +51,14 @@ public class RaycastPlayer : MonoBehaviour
                 {
                     leccionAbierta = true;
                     playerMovement.movimientoActivo = false;
+                    playerMovement.move = Vector3.zero;
                     Cursor.lockState = CursorLockMode.None;
                     Cursor.visible = true;
                     Interaccion.sprite = vacioSprite;
                     canvasLeccion.alpha = 1;
                     canvasLeccion.interactable = true;
                     canvasLinterna.alpha = 0;
+                    canvasSuperLinterna.alpha = 0;
                 }
             }
             else if (hit.collider.CompareTag("Pilas"))

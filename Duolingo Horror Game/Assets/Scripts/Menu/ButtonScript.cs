@@ -231,7 +231,7 @@ public class ButtonScript : MonoBehaviour
                 Debug.Log("Cargando images");
                 if (DatosJugador.fileExists)
                 {
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < 3; i++)
                     {
                         if (nochesSuperadas[i])
                         {

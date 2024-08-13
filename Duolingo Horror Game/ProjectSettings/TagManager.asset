@@ -16,6 +16,8 @@ TagManager:
   - Audio
   - CartaDuo
   - PhantomDuo
+  - Notificaciones
+  - SuperAtaque
   layers:
   - Default
   - TransparentFX

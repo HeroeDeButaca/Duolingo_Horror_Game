@@ -107,6 +107,30 @@ public class Boton_palabra_leccion : MonoBehaviour
                         timeElapsed = 0;
                     }
                     break;
+                case 8:
+                    if (esRespuesta && timeElapsed < lerpDuration && !noCambiar)
+                    {
+                        rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, new Vector3(-195, -109.5f, 0), timeElapsed / lerpDuration);
+                        timeElapsed += Time.deltaTime;
+                    }
+                    else if (esRespuesta && timeElapsed >= lerpDuration && !noCambiar)
+                    {
+                        noCambiar = true;
+                        timeElapsed = 0;
+                    }
+                    break;
+                case 9:
+                    if (esRespuesta && timeElapsed < lerpDuration && !noCambiar)
+                    {
+                        rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, new Vector3(-35, -109.5f, 0), timeElapsed / lerpDuration);
+                        timeElapsed += Time.deltaTime;
+                    }
+                    else if (esRespuesta && timeElapsed >= lerpDuration && !noCambiar)
+                    {
+                        noCambiar = true;
+                        timeElapsed = 0;
+                    }
+                    break;
             }
         }
         if (reordenar_palabras)
@@ -138,7 +162,6 @@ public class Boton_palabra_leccion : MonoBehaviour
             orden = 0;
             timeElapsed = 0;
             reordenar_palabras = false;
-            Debug.Log("Fin ReOrdenar");
         }
     }
 }
