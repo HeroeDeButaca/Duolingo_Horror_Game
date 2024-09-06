@@ -8,7 +8,7 @@ public class RaycastPlayer : MonoBehaviour
     public float distancia = 3, distanciaLinterna = 12;
     [SerializeField] private CanvasGroup canvasLeccion, canvasLinterna, canvasSuperLinterna;
     [SerializeField] private Image Interaccion;
-    [SerializeField] private Sprite vacioSprite, puertaSprite, leccionSprite, linternaSprite, cartaSprite;
+    [SerializeField] private Sprite vacioSprite, puertaSprite, leccionSprite, linternaSprite, cartaSprite, botonSprite;
     private PlayerMovement playerMovement;
     [SerializeField] private Linterna linterna;
     [SerializeField] private GameObject prefabParticle, duo;
@@ -22,7 +22,7 @@ public class RaycastPlayer : MonoBehaviour
         gameOver = GameObject.FindGameObjectWithTag("Canvas").GetComponent<GameOver>();
         leccionAbierta = false;
     }
-    void Update()
+    void FixedUpdate()
     {
         RaycastHit hit;
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward), Color.green, distancia);
@@ -42,7 +42,7 @@ public class RaycastPlayer : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Ordenador_leccion"))
             {
-                if (!leccionAbierta)
+                if (!leccionAbierta && Interaccion.sprite != leccionSprite)
                 {
                     Interaccion.sprite = leccionSprite;
                 }
@@ -83,6 +83,15 @@ public class RaycastPlayer : MonoBehaviour
                     hit.collider.gameObject.GetComponent<BoxCollider>().enabled = false;
                 }
             }
+            else if (hit.collider.CompareTag("Space_button"))
+            {
+                Interaccion.sprite = botonSprite;
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<Animator>().SetBool("Pulsar", true);
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().AlienButton();
+                }
+            }
             else if (hit.collider.CompareTag("Untagged"))
             {
                 Interaccion.sprite = vacioSprite;
@@ -91,6 +100,7 @@ public class RaycastPlayer : MonoBehaviour
         else
         {
             Interaccion.sprite = vacioSprite;
+            Debug.Log("Activado Else");
         }
     }
 }

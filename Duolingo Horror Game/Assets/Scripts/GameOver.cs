@@ -22,7 +22,7 @@ public class GameOver : MonoBehaviour
     [SerializeField] private RawImage[] objects;
     [SerializeField] private Sprite[] sprite;
     [SerializeField] private Transform camaraTransf, imageJumpscare;
-    [SerializeField] private TMP_Text textoPuntos, numNocheActual, segundos;
+    [SerializeField] private TMP_Text textoPuntos, numNocheActual, segundos, explicacion;
     private PlayerMovement playerMovement;
     private DuoController duoController;
     private PhantomDuoController phantomDuo;
@@ -32,17 +32,19 @@ public class GameOver : MonoBehaviour
     [SerializeField] private VideoPlayer videoPlayer;
     private AudioManager audioManager;
     [SerializeField] private Notificaciones notifications;
+    private string stringDuo;
     void Start()
     {
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
         duoController = GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>();
         phantomDuo = GameObject.FindGameObjectWithTag("PhantomDuo").GetComponent<PhantomDuoController>();
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
-        images[1].sprite = sprite[0];
-        nocheSeleccionada = 0;
+        modificador = GameObject.FindGameObjectWithTag("Canvas").GetComponent<DuoLesson>().modificador;
+        //images[1].sprite = sprite[0];
+        nocheSeleccionada = 0 + modificador;
+        Dificultad(0);
         alphaNoche = 0.5f;
         scale = 0.8f;
-        modificador = GameObject.FindGameObjectWithTag("Canvas").GetComponent<DuoLesson>().modificador;
         DatosJuego datosJuego = DatosJugador.LoadPlayerData();
         if (DatosJugador.fileExists)
         {
@@ -108,25 +110,39 @@ public class GameOver : MonoBehaviour
             else if(canvasGroups[2].alpha <= 0)
             {
                 camaraTransf.localPosition = new Vector3(0, 0.6f, 0);
-                if(nocheSeleccionada != 2)
+                if(nocheSeleccionada != 2 && nocheSeleccionada != 5)
                 {
+                    linterna.GetComponent<Linterna>().noche3 = false;
+                    stringDuo = "Duo te ha atacado";
                     canvasGroups[3].alpha = 1;
                 }
-                else if(nocheSeleccionada == 2)
+                else if(nocheSeleccionada == 2 || nocheSeleccionada == 5)
                 {
+                    linterna.GetComponent<Linterna>().noche3 = true;
+                    stringDuo = "Superduo te ha atacado";
+                    duoController.ChangeToSuper();
                     canvasGroups[7].alpha = 1;
+                }
+                if(nocheSeleccionada == 3 || nocheSeleccionada == 4)
+                {
+                    Debug.Log("Activar UFO");
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().gameStart = true;
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().minimumTimeSpawn = 20;
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().maxTimeSpawn = 40;
+                }
+                else if(nocheSeleccionada == 5)
+                {
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().gameStart = true;
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().minimumTimeSpawn = 15;
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().maxTimeSpawn = 35;
                 }
                 playerMovement.movimientoActivo = true;
                 linterna.SetActive(true);
                 duoController.gameStart = true;
-                if(nocheSeleccionada >= 1)
+                if(nocheSeleccionada >= 1 && nocheSeleccionada != 3)
                 {
                     phantomDuo.gameStart = true;
                     notifications.gameStart = true;
-                    if(nocheSeleccionada == 2)
-                    {
-                        duoController.ChangeToSuper();
-                    }
                 }
                 moverCamara = false;
             }
@@ -144,12 +160,12 @@ public class GameOver : MonoBehaviour
             botones();
         }
     }
-    public void Reintentar()
+    public void Reintentar(int nuevaEscena)
     {
         canvasGroups[1].interactable = false;
         canvasGroups[1].blocksRaycasts = false;
         canvasGroups[0].blocksRaycasts = true;
-        newScene = 1;
+        newScene = nuevaEscena;
         ponerCanvasNegro = true;
     }
     public void VolverMenu()
@@ -174,7 +190,7 @@ public class GameOver : MonoBehaviour
     public void Dificultad(int numeroNoche)
     {
         numNocheActual.text = (numeroNoche + 1).ToString("0");
-        nocheSeleccionada = numeroNoche;
+        nocheSeleccionada = numeroNoche + modificador;
         switch (nocheSeleccionada)
         {
             case 0:
@@ -191,6 +207,24 @@ public class GameOver : MonoBehaviour
                 images[0].sprite = sprite[3];
                 images[1].sprite = sprite[1];
                 images[2].sprite = sprite[2];
+                break;
+            case 3:
+                images[0].sprite = sprite[4];
+                images[1].sprite = sprite[0];
+                images[2].sprite = sprite[5];
+                images[3].sprite = sprite[4];
+                break;
+            case 4:
+                images[0].sprite = sprite[0];
+                images[1].sprite = sprite[1];
+                images[2].sprite = sprite[2];
+                images[3].sprite = sprite[5];
+                break;
+            case 5:
+                images[0].sprite = sprite[3];
+                images[1].sprite = sprite[1];
+                images[2].sprite = sprite[2];
+                images[3].sprite = sprite[5];
                 break;
         }
     }
@@ -228,6 +262,7 @@ public class GameOver : MonoBehaviour
     {
         if (!oneTimeBool)
         {
+            explicacion.text = stringDuo;
             linterna.SetActive(false);
             canvasGroups[3].alpha = 0;
             canvasGroups[4].alpha = 1;
@@ -324,4 +359,21 @@ public class GameOver : MonoBehaviour
         }
         botonesCargados = true;
     }
+    public void PartyEndAliens()
+    {
+        duoController.gameStart = false;
+        phantomDuo.gameStart = false;
+        notifications.gameStart = false;
+        explicacion.text = "Los aliens destruyeron tu nave";
+        linterna.SetActive(false);
+        canvasGroups[3].alpha = 0;
+        canvasGroups[5].alpha = 0;
+        canvasGroups[6].alpha = 0;
+        canvasGroups[1].alpha = 1;
+        canvasGroups[1].interactable = true;
+        canvasGroups[1].blocksRaycasts = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+    
 }

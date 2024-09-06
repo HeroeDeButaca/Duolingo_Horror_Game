@@ -36,6 +36,15 @@ public class DuoLesson : MonoBehaviour
         {"around", "here", "You", "Look", "you", "me", "I'm", "ham", "my" },
         {"you", "let", "I", "lesson", "never", "finish", "this", "to", "will" }
     };
+    private string[,] stringLeccion4 = new string[6, 7]
+    {
+        {"en","Tú","Estabas","Estas","espacio","ella","el"},
+        {"muy", "Te", "poco", "sientes", "solo", "sentias", "que"},
+        {"more", "worry", "very", "sorry", "Isn't", "Aren't", "Don't"},
+        {"I", "be", "will", "there", "always", "of", "isn't"},
+        {"aliens", "too", "for", "And", "the", "I", "will"},
+        {"ju", "ja", "ja", "ji", "ja", "je", "Muah"}
+    };
     private string[] stringIngles;
     private string[] stringIngles1 =
     {
@@ -64,10 +73,20 @@ public class DuoLesson : MonoBehaviour
         "Mira a tu alrededor, estoy ahí",
         "No dejaré que termines la lección"
     };
+    private string[] stringIngles4 =
+    {
+        "You are in the space",
+        "You feel very alone?",
+        "No te preocupes",
+        "Yo siempre estare ahí",
+        "And the Aliens too",
+        "Muah ja ja ja",
+    };
     private string[] idAns;
     private string[] idAns1 = {"Hola me llamo Duo ", "Me gustan los conejos ", "Yo como conejos ", "Tu comes conejos ", "Me gusta comer humanos también "};
     private string[] idAns2 = { "Let's continue with yesterday's talk ", "A ti te gusta comer humanos ", "Tenéis muy buen sabor ", "Dejate comer por mi por favor ", "You only have to wait ", "No termines esta lección "};
     private string[] idAns3 = { "Soy SuperDuo ", "I'm more annoying than before ", "Y más veloz ", "I will never stop of chasing you ", "Deja la lección ", "Look around you I'm here ", "I will never let you to finish this lesson " };
+    private string[] idAns4 = { "Estas en el espacio ", "Te sientes muy solo ", "Don't worry ", "I will always be there ", "And the aliens too ", "Muah ja ja ja " };
 
     public string idIntroducido, fraseIntroducida;
     [SerializeField] private int actLevel = 0, erroresCometidos = 0;
@@ -352,7 +371,8 @@ public class DuoLesson : MonoBehaviour
     }
     public void assignarArray()
     {
-        total += modificador + gameOver.nocheSeleccionada;
+        total = gameOver.nocheSeleccionada;
+        Debug.Log("El total es: " + total);
         switch (total)
         {
             case 0:
@@ -375,6 +395,14 @@ public class DuoLesson : MonoBehaviour
                 stringIngles = stringIngles3;
                 idAns = idAns3;
                 palabrasMax = 9;
+                break;
+            case 3:
+                stringLeccion = new string[6, 7];
+                stringLeccion = stringLeccion4;
+                stringIngles = stringIngles4;
+                idAns = idAns4;
+                palabrasMax = 7;
+                Debug.Log("Noche espacial");
                 break;
         }
         empezarLeccion = true;

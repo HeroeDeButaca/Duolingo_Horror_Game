@@ -9,7 +9,8 @@ public class Linterna : MonoBehaviour
     [SerializeField] private Light luzLinterna;
     [SerializeField] private RawImage[] imageCargas;
     public int cargas, maxCargas;
-    private bool activeLight, noche3, bajarIntensity = false, sube = false;
+    private bool activeLight, bajarIntensity = false, sube = false;
+    public bool noche3;
     private float lanAtaCooldown = 0, t;
     public bool canShoot = true, lanzaAtaque = false;
     [SerializeField] private GameObject textoNoBateria, textoNoBateria2;
@@ -33,7 +34,6 @@ public class Linterna : MonoBehaviour
         duoController = GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>();
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         phantomDuo = GameObject.FindGameObjectWithTag("PhantomDuo").GetComponent<PhantomDuoController>();
-        noche3 = GameObject.FindGameObjectWithTag("Canvas").GetComponent<GameOver>().nocheSeleccionada == 2 ? true : false;
         if (!noche3)
         {
             cargas = 3;

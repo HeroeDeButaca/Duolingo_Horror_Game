@@ -91,7 +91,8 @@ public class DuoController : MonoBehaviour
 
         if (createNewSpawn && gameStart)
         {
-            duolingoActualSpawn = Random.Range(0, duolingoSpawns.Length - 1);
+            //duolingoActualSpawn = Random.Range(0, duolingoSpawns.Length - 1);
+            duolingoActualSpawn = 2;
             while (duolingoActualSpawn == duolingoPreviusSpawn)
             {
                 duolingoActualSpawn = Random.Range(0, duolingoSpawns.Length - 1);

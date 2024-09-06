@@ -18,6 +18,8 @@ TagManager:
   - PhantomDuo
   - Notificaciones
   - SuperAtaque
+  - Space_button
+  - UFO
   layers:
   - Default
   - TransparentFX
