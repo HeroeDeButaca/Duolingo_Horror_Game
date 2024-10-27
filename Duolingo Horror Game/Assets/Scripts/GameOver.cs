@@ -26,6 +26,7 @@ public class GameOver : MonoBehaviour
     private PlayerMovement playerMovement;
     private DuoController duoController;
     private PhantomDuoController phantomDuo;
+    private ChangeLessonPC changeLesson;
     [SerializeField] private GameObject linterna;
     [SerializeField] private GameObject[] cartasDuo;
     [SerializeField] private Button[] botonNoches;
@@ -40,6 +41,7 @@ public class GameOver : MonoBehaviour
         phantomDuo = GameObject.FindGameObjectWithTag("PhantomDuo").GetComponent<PhantomDuoController>();
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         modificador = GameObject.FindGameObjectWithTag("Canvas").GetComponent<DuoLesson>().modificador;
+        changeLesson = GameObject.FindGameObjectWithTag("Canvas").GetComponent<ChangeLessonPC>();
         //images[1].sprite = sprite[0];
         nocheSeleccionada = 0 + modificador;
         Dificultad(0);
@@ -65,7 +67,14 @@ public class GameOver : MonoBehaviour
             ponerCanvasNegro = true;
             canvasGroups[2].interactable = false;
             canvasGroups[2].blocksRaycasts = false;
+            newScene = 0;
         }
+
+        /*if(Input.GetKeyDown(KeyCode.X) && canvasGroups[2].alpha == 1)
+        {
+            canvasGroups[2].alpha = 0;
+        }*/
+
         if (canvasGroups[0].alpha != 0 && quitarCanvasNegro)
         {
             canvasGroups[0].alpha = Mathf.Lerp(1, 0, t);
@@ -127,14 +136,15 @@ public class GameOver : MonoBehaviour
                 {
                     Debug.Log("Activar UFO");
                     GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().gameStart = true;
-                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().minimumTimeSpawn = 20;
-                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().maxTimeSpawn = 40;
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().minimumTimeSpawn = 40;
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().maxTimeSpawn = 50;
+                    changeLesson.gameStart = true;
                 }
                 else if(nocheSeleccionada == 5)
                 {
                     GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().gameStart = true;
-                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().minimumTimeSpawn = 15;
-                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().maxTimeSpawn = 35;
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().minimumTimeSpawn = 30;
+                    GameObject.FindGameObjectWithTag("UFO").GetComponent<AlienAttack>().maxTimeSpawn = 45;
                 }
                 playerMovement.movimientoActivo = true;
                 linterna.SetActive(true);
@@ -375,5 +385,4 @@ public class GameOver : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
-    
 }

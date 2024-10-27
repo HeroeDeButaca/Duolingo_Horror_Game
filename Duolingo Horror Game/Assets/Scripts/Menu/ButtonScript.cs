@@ -18,6 +18,7 @@ public class ButtonScript : MonoBehaviour
     [SerializeField] private string[] textoNiveles;
     [SerializeField] private Image[] lunas, cartas;
     private Color notGet = new Vector4(1, 1, 1, 0.5f);
+    [SerializeField] private Button buttEmpezarMapa;
 
     //Datos juego
     private bool[] nochesSuperadas = new bool[10], cartasObtenidas = new bool[9];
@@ -95,6 +96,23 @@ public class ButtonScript : MonoBehaviour
             else if (d == 3)
             {
                 textoBoton.text = "???";
+            }
+
+            if(d == 0)
+            {
+                buttEmpezarMapa.interactable = true;
+            }
+            else if (nochesSuperadas[1] == true && d == 1)
+            {
+                buttEmpezarMapa.interactable = true;
+            }
+            else if(nochesSuperadas[4] == true && d == 2)
+            {
+                buttEmpezarMapa.interactable = true;
+            }
+            else
+            {
+                buttEmpezarMapa.interactable = false;
             }
         }
         else if(canvasGroups[1].alpha == 1 && camara.position != camaraMapas[d].position)
@@ -242,6 +260,32 @@ public class ButtonScript : MonoBehaviour
                             lunas[i].color = notGet;
                         }
                         if (cartasObtenidas[i])
+                        {
+                            cartas[i].color = Vector4.one;
+                        }
+                        else
+                        {
+                            cartas[i].color = notGet;
+                        }
+                        Debug.Log(i);
+                    }
+                }
+                break;
+            case 1:
+                Debug.Log("Cargando images 2");
+                if (DatosJugador.fileExists)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (nochesSuperadas[i + 3])
+                        {
+                            lunas[i].color = Vector4.one;
+                        }
+                        else
+                        {
+                            lunas[i].color = notGet;
+                        }
+                        if (cartasObtenidas[i + 3])
                         {
                             cartas[i].color = Vector4.one;
                         }

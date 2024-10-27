@@ -5,7 +5,7 @@ using TMPro;
 
 public class AlienAttack : MonoBehaviour
 {
-    [SerializeField] private float timeToSpawn, transcurredTime, alienAttTime;
+    [SerializeField] private float timeToSpawn, transcurredTime, alienAttTime, particleTime;
     public float minimumTimeSpawn, maxTimeSpawn;
     public bool gameStart = false;
     private bool prepareSpawn, spawned;
@@ -15,6 +15,7 @@ public class AlienAttack : MonoBehaviour
     private Color normalNeon, redNeon, lerpedColor, notVeryRed;
     [SerializeField] private TMP_Text explicacion;
     private GameOver gameOver;
+    private DuoController duoController;
     void Start()
     {
         normalNeon = new Vector4(1.72079539f, 1.68170476f, 0.98202455f, 1);
@@ -24,6 +25,7 @@ public class AlienAttack : MonoBehaviour
         animator = GetComponent<Animator>();
         gameOver = GameObject.FindGameObjectWithTag("Canvas").GetComponent<GameOver>();
         transcurredTime = 0;
+        duoController = GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>();
         prepareSpawn = true;
     }
 
@@ -43,26 +45,30 @@ public class AlienAttack : MonoBehaviour
             animator.SetBool("Aparecer", true);
             spawned = true;
         }
-        if(gameStart && spawned && alienAttTime < 35)
+        if(duoController.gameStart && spawned && alienAttTime < 35)
         {
             alienAttTime += Time.deltaTime;
             lerpedColor = Color.Lerp(notVeryRed, redNeon, Mathf.PingPong(Time.time, 1));
             neon.SetColor("_EmissionColor", lerpedColor);
             Debug.Log("Te atacan los aliens, " + lerpedColor);
         }
-        else if(gameStart && spawned && alienAttTime >= 35)
+        else if(duoController.gameStart && spawned && alienAttTime >= 35)
         {
             gameOver.PartyEndAliens();
         }
-        if(animator.GetBool("Explosion") && prefabCreado.GetComponent<ParticleSystem>().time >= 0.99f)
+        if (animator.GetBool("Explosion") && particleTime < 0.98f)
+        {
+            particleTime += Time.deltaTime;
+        }
+        else if(animator.GetBool("Explosion") && particleTime >= 0.98f)
         {
             Destroy(prefabCreado);
             neon.SetColor("_EmissionColor", normalNeon);
+            animator.SetBool("Explosion", false);
             animator.SetBool("Aparecer", false);
-            animator.SetBool("Explosion", true);
             alienAttTime = 0;
             prepareSpawn = true;
-            spawned = false;
+            particleTime = 0;
         }
     }
     public void AlienButton()
@@ -70,7 +76,9 @@ public class AlienAttack : MonoBehaviour
         if (spawned)
         {
             animator.SetBool("Explosion", true);
+            animator.SetBool("Aparecer", false);
             prefabCreado = Instantiate(explosionPrefab, this.gameObject.transform);
+            spawned = false;
             transcurredTime = 0;
         }
         animator.SetBool("Pulsar", false);

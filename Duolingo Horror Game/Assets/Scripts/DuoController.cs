@@ -9,7 +9,7 @@ public class DuoController : MonoBehaviour
     public Transform duoTransform;
     public NavMeshAgent duoNavMesh;
     private Animator duoAnimator;
-    public Transform duoHidedTransform;
+    public Transform duoHidedTransform, jumpscarePosition;
     [SerializeField] private Transform[] duolingoSpawns;
     private Vector3 destino;
     private int duolingoActualSpawn = 10, duolingoPreviusSpawn = 12;
@@ -22,8 +22,8 @@ public class DuoController : MonoBehaviour
     private DuoLesson duoLesson;
     private GameOver gameOver;
     private AudioManager audioManager;
-    [SerializeField] private BoxCollider boxCollider;
     private float minimumTimeSpawn, maximumTimeSpawn;
+
 
     // SuperDuo Materials
     [SerializeField] private Material[] superduoMaterials;
@@ -91,8 +91,7 @@ public class DuoController : MonoBehaviour
 
         if (createNewSpawn && gameStart)
         {
-            //duolingoActualSpawn = Random.Range(0, duolingoSpawns.Length - 1);
-            duolingoActualSpawn = 2;
+            duolingoActualSpawn = Random.Range(0, duolingoSpawns.Length - 1);
             while (duolingoActualSpawn == duolingoPreviusSpawn)
             {
                 duolingoActualSpawn = Random.Range(0, duolingoSpawns.Length - 1);
@@ -199,8 +198,9 @@ public class DuoController : MonoBehaviour
         {
             if (!movement && duoAnimator.GetBool("jumpscare") == true)
             {
+                duoTransform.position = jumpscarePosition.position;
                 duoTransform.localPosition += new Vector3(0, 0.75f, 0);
-                duoTransform.localRotation = Quaternion.Euler(0, duoTransform.localRotation.y + 15, 0);
+                //duoTransform.localRotation = Quaternion.Euler(0, duoTransform.localRotation.y + 15, 0);
                 movement = true;
             }
             else if (movement)
@@ -215,7 +215,7 @@ public class DuoController : MonoBehaviour
                 }
             }
         }
-        duoTransform.LookAt(new Vector3(0, playerTransform.position.y, 0));
+        duoTransform.rotation = jumpscarePosition.rotation;
     }
     private void OnCollisionEnter(Collision collision)
     {

@@ -45,6 +45,27 @@ public class DuoLesson : MonoBehaviour
         {"aliens", "too", "for", "And", "the", "I", "will"},
         {"ju", "ja", "ja", "ji", "ja", "je", "Muah"}
     };
+    private string[,] stringLeccion5 = new string[7, 8]
+    {
+        {"molestan", "te", "Seguro", "aliens", "te", "que", "los", "Yo"},
+        {"Atacan", "aproximadamente", "cuarenta", "segundos", "cada", "cuatro", "puede", "treinta"},
+        {"enemy", "only", "not", "your", "I'm", "friend", "they", "aliens"},
+        {"tener", "varias", "varios", "cuidado", "de", "peligros", "Debes", "que"},
+        {"tomorrow", "And", "two", "have", "you", "other", "will", "problems"},
+        {"aliens", "mas", "vendrán", "Ayer", "Los", "alarma", "la", "seguido"},
+        {"be", "SuperDuo", "tomorrow", "will", "I", "Duo", "wall", "And"},
+    };
+    private string[,] stringLeccion6 = new string[8, 8]
+    {
+        {"Welcome", "night", "in", "to", "last", "Space", "your", "you"},
+        {"do", "does", "you", "What", "feel", "now", "we", "How"},
+        {"como", "y", "estresado", "Emocionado", "o", "Exitado", "estrellas", "planeta"},
+        {"emocionado", "como", "que", "yo", "estresado", "Imagino", "tu", "estás"},
+        {"de", "su", "jaja", "dejaremos", "a", "No", "ir", "posición"},
+        {"No", "librarás", "mi", "tu", "Si", "NUNCA", "de", "te"},
+        {"make", "you", "it", "Even", "if", "through", "Pair", "tonight..."},
+        {"be", "bad", "back", "...tomorrow", "you", "for", "four", "I'll"}
+    };
     private string[] stringIngles;
     private string[] stringIngles1 =
     {
@@ -82,11 +103,34 @@ public class DuoLesson : MonoBehaviour
         "And the Aliens too",
         "Muah ja ja ja",
     };
+    private string[] stringIngles5 =
+    {
+        "I'm sure the aliens are bothering you",
+        "Attack every fourty seconds roughly",
+        "No soy tu unico enemigo",
+        "You have to be careful of many hazards",
+        "Y mañana tendrás otros dos problemas",
+        "The aliens will come more often",
+        "Y mañana seré SuperDuo"
+    };
+    private string[] stringIngles6 =
+    {
+        "Bienvenido a tu última noche en el espacio",
+        "¿Como te sientes ahora?",
+        "Excited or stressed",
+        "I imagine you are stressed",
+        "We will not stop going to your position, jaja",
+        "You'll NEVER get rid of me",
+        "Aunque superes esta noche...",
+        "...mañana volveré a por ti",
+    };
     private string[] idAns;
     private string[] idAns1 = {"Hola me llamo Duo ", "Me gustan los conejos ", "Yo como conejos ", "Tu comes conejos ", "Me gusta comer humanos también "};
-    private string[] idAns2 = { "Let's continue with yesterday's talk ", "A ti te gusta comer humanos ", "Tenéis muy buen sabor ", "Dejate comer por mi por favor ", "You only have to wait ", "No termines esta lección "};
-    private string[] idAns3 = { "Soy SuperDuo ", "I'm more annoying than before ", "Y más veloz ", "I will never stop of chasing you ", "Deja la lección ", "Look around you I'm here ", "I will never let you to finish this lesson " };
-    private string[] idAns4 = { "Estas en el espacio ", "Te sientes muy solo ", "Don't worry ", "I will always be there ", "And the aliens too ", "Muah ja ja ja " };
+    private string[] idAns2 = {"Let's continue with yesterday's talk ", "A ti te gusta comer humanos ", "Tenéis muy buen sabor ", "Dejate comer por mi por favor ", "You only have to wait ", "No termines esta lección "};
+    private string[] idAns3 = {"Soy SuperDuo ", "I'm more annoying than before ", "Y más veloz ", "I will never stop of chasing you ", "Deja la lección ", "Look around you I'm here ", "I will never let you to finish this lesson "};
+    private string[] idAns4 = {"Estas en el espacio ", "Te sientes muy solo ", "Don't worry ", "I will always be there ", "And the aliens too ", "Muah ja ja ja "};
+    private string[] idAns5 = {"Seguro que los aliens te molestan ", "Atacan aproximadamente cada cuarenta segundos ", "I'm not your only enemy ", "Debes tener cuidado de varios peligros ", "And tomorrow you will have two other problems ", "Los aliens vendrán mas seguido ", "And tomorrow I will be SuperDuo " };
+    private string[] idAns6 = { "Welcome to your last night in Space ", "How do you feel now ", "Emocionado o estresado ", "Imagino que estás estresado ", "No dejaremos de ir a su posición jaja ", "No te librarás de mi NUNCA ", "Even if you make it through tonight... ", "...tomorrow I'll be back for you " };
 
     public string idIntroducido, fraseIntroducida;
     [SerializeField] private int actLevel = 0, erroresCometidos = 0;
@@ -216,11 +260,11 @@ public class DuoLesson : MonoBehaviour
     {
         canvasLeccion.alpha = 0;
         canvasLeccion.interactable = false;
-        if(gameOver.nocheSeleccionada < 2)
+        if(gameOver.nocheSeleccionada != 2 && gameOver.nocheSeleccionada != 5)
         {
             canvasLinterna.alpha = 1;
         }
-        else if(gameOver.nocheSeleccionada >= 2)
+        else if(gameOver.nocheSeleccionada == 2 || gameOver.nocheSeleccionada == 5)
         {
             canvasSuperLinterna.alpha = 1;
         }
@@ -293,6 +337,7 @@ public class DuoLesson : MonoBehaviour
                 {
                     textoIngles.text = "¡Lección Completada!";
                     GameObject.FindGameObjectWithTag("Duolingo").GetComponent<DuoController>().gameStart = false;
+                    GameObject.FindGameObjectWithTag("Duolingo").GetComponent<BoxCollider>().enabled = false;
                     GameObject.FindGameObjectWithTag("PhantomDuo").GetComponent<PhantomDuoController>().gameStart = false;
                     if (GameObject.FindGameObjectWithTag("Duolingo").GetComponent<NavMeshAgent>().enabled)
                     {
@@ -402,7 +447,20 @@ public class DuoLesson : MonoBehaviour
                 stringIngles = stringIngles4;
                 idAns = idAns4;
                 palabrasMax = 7;
-                Debug.Log("Noche espacial");
+                break;
+            case 4:
+                stringLeccion = new string[7, 8];
+                stringLeccion = stringLeccion5;
+                stringIngles = stringIngles5;
+                idAns = idAns5;
+                palabrasMax = 8;
+                break;
+            case 5:
+                stringLeccion = new string[8, 8];
+                stringLeccion = stringLeccion6;
+                stringIngles = stringIngles6;
+                idAns = idAns6;
+                palabrasMax = 8;
                 break;
         }
         empezarLeccion = true;

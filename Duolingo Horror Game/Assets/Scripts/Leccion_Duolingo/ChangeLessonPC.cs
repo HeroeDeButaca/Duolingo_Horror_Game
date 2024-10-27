@@ -4,23 +4,34 @@ using UnityEngine;
 
 public class ChangeLessonPC : MonoBehaviour
 {
-    [SerializeField] private GameObject[] pantallas;
+    [SerializeField] private GameObject[] pantallas, negro;
     private int pantallaEncendida;
-    private float transcurredTime, timeToChange;
-    private bool gameStart;
+    [SerializeField] private float transcurredTime, timeToChange;
+    public bool gameStart;
     void Start()
     {
         timeToChange = Random.Range(35, 50);
-        pantallaEncendida = Random.Range(0, pantallas.Length - 1);
-        for(int i = 0; i < (pantallas.Length - 1); i++)
+        pantallaEncendida = Random.Range(0, (pantallas.Length));
+        if(pantallaEncendida == pantallas.Length)
         {
-            if(i != pantallaEncendida)
+            pantallaEncendida = 2;
+        }
+        Debug.Log((pantallas.Length - 1));
+        for(int i = 0; i < (pantallas.Length); i++)
+        {
+            if (i != pantallaEncendida)
             {
                 pantallas[i].tag = "Untagged";
+                negro[i].SetActive(true);
             }
             else if(i == pantallaEncendida)
             {
                 pantallas[i].tag = "Ordenador_leccion";
+                if (negro[i])
+                {
+                    negro[i].SetActive(false);
+                }
+                
             }
         }
     }
@@ -32,7 +43,26 @@ public class ChangeLessonPC : MonoBehaviour
         }
         else if(gameStart && transcurredTime >= timeToChange)
         {
-
+            pantallaEncendida = Random.Range(0, (pantallas.Length));
+            if (pantallaEncendida == pantallas.Length)
+            {
+                pantallaEncendida = 2;
+            }
+            for(int i = 0; i < (pantallas.Length); i++)
+            {
+                if(pantallaEncendida == i)
+                {
+                    pantallas[i].tag = "Ordenador_leccion";
+                    negro[i].SetActive(false);
+                }
+                else if(pantallaEncendida != i)
+                {
+                    pantallas[i].tag = "Untagged";
+                    negro[i].SetActive(true);
+                }
+            }
+            timeToChange = Random.Range(35, 50);
+            transcurredTime = 0;
         }
     }
 }

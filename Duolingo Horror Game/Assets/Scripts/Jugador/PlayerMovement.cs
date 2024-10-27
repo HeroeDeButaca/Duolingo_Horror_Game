@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]private Vector3 spawnPoint;
     [HideInInspector] public bool movimientoActivo = false, GoSpawn = false, rotateJumpscare = false, quieto = false;
     [SerializeField] private bool pasoMadera, pasoEstacion, pasoOficina, pasoReto;
+    [SerializeField] private Transform jumpscarePos;
 
     [Header("Opciones de Camara")]
     public Camera cam;
@@ -40,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private CanvasGroup sliderCanvasGroup = null;
 
     [Header("Otros")]
-    [SerializeField]private Transform duoTransform, camTransform;
+    [SerializeField]private Transform duoTransform, camTransform, playerTransform;
     private AudioManager audioManager;
     [SerializeField] private GlobalVolumeScript volumeScript;
 
@@ -52,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         duoTransform = GameObject.FindGameObjectWithTag("DuoCenter").GetComponent<Transform>();
         movimientoActivo = false;
+        playerTransform = GetComponent<Transform>();
         //Cursor.lockState = CursorLockMode.Locked;
     }
     void Update()
@@ -62,7 +64,10 @@ public class PlayerMovement : MonoBehaviour
             v_mouse += mouseVertical * Input.GetAxis("Mouse Y");
 
             v_mouse = Mathf.Clamp(v_mouse, minRotation, maxRotation);
-            cam.transform.localEulerAngles = new Vector3(-v_mouse, 0, 0);
+            if (!rotateJumpscare)
+            {
+                cam.transform.localEulerAngles = new Vector3(-v_mouse, 0, 0);
+            }
             transform.Rotate(0, h_mouse, 0);
 
             move = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
@@ -130,7 +135,13 @@ public class PlayerMovement : MonoBehaviour
         }
         if (rotateJumpscare)
         {
-            camTransform.LookAt(duoTransform.position);
+            playerTransform.position = jumpscarePos.position;
+            if (camTransform.parent != null)
+            {
+                transform.parent = camTransform.parent;  // Guardar el parent original
+                camTransform.parent = null;            // Desacoplar la cámara
+            }
+            camTransform.rotation = jumpscarePos.rotation;
         }
         if (quieto)
         {
@@ -199,14 +210,14 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Duolingo"))
         {
             movimientoActivo = false;
-            rotateJumpscare = true;
-            characterController.radius = 1.15f;
-            //apartaDuo.enabled = true;
             rb.velocity = Vector3.zero;
             move = Vector3.zero;
             gravity = 0;
             rb.useGravity = false;
             rb.isKinematic = true;
+            rotateJumpscare = true;
+            characterController.radius = 1.15f;
+            //apartaDuo.enabled = true;
         }
     }
     private void Quieto()

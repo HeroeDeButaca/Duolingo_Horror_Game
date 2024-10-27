@@ -4991,6 +4991,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 448686993}
   m_CullTransparentMesh: 1
+--- !u!1 &461253419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 461253420}
+  m_Layer: 0
+  m_Name: playerJumpPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &461253420
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461253419}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.014744445, y: 0.9538387, z: -0.047484856, w: 0.2961749}
+  m_LocalPosition: {x: 4.532, y: 1.49, z: -3.676}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 5.7, y: 145.5, z: 0}
 --- !u!1 &473541071
 GameObject:
   m_ObjectHideFlags: 0
@@ -8377,8 +8408,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807324546}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -8.311, y: 0.83000004, z: -0.23899963}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16, y: -0.252, z: 8.67}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -8393,7 +8424,7 @@ Transform:
   - {fileID: 1471801020}
   - {fileID: 387204732}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &807324554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12954,6 +12985,7 @@ MonoBehaviour:
   pasoEstacion: 0
   pasoOficina: 0
   pasoReto: 0
+  jumpscarePos: {fileID: 461253420}
   cam: {fileID: 963194227}
   mouseHorizontal: 3
   mouseVertical: 2
@@ -12968,8 +13000,9 @@ MonoBehaviour:
   staminaProgressUI: {fileID: 723685450}
   staminaProgressUI2: {fileID: 195929905}
   sliderCanvasGroup: {fileID: 443828963}
-  duoTransform: {fileID: 1620403346}
+  duoTransform: {fileID: 430234607585998092}
   camTransform: {fileID: 963194228}
+  playerTransform: {fileID: 1331950185}
   volumeScript: {fileID: 1866253094}
 --- !u!143 &1331950189
 CharacterController:
@@ -13025,6 +13058,37 @@ MonoBehaviour:
   prefabParticle: {fileID: 560264846929651970, guid: a43cf33b25e0684449be4895f3c69edd, type: 3}
   duo: {fileID: 1620403345}
   leccionAbierta: 0
+--- !u!1 &1336878171
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1336878172}
+  m_Layer: 0
+  m_Name: duoJumpPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &1336878172
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336878171}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.2948743, z: 0, w: 0.9555361}
+  m_LocalPosition: {x: 5.8380003, y: -0.030000001, z: -5.471}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -34.3, z: 0}
 --- !u!1 &1336967505
 GameObject:
   m_ObjectHideFlags: 0
@@ -18572,59 +18636,6 @@ Transform:
   - {fileID: 930318561}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1908689337
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1908689338}
-  - component: {fileID: 1908689339}
-  m_Layer: 0
-  m_Name: cuadradoColl
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1908689338
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908689337}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: 0.875}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 430234607585998092}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1908689339
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908689337}
-  m_Material: {fileID: 13400000, guid: cbe7a54315ecf214999ba10cfd60a461, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1.15, y: 2.7467825, z: 0.7875244}
-  m_Center: {x: 0, y: 0.59339106, z: 0.059748165}
 --- !u!1 &1913021758
 GameObject:
   m_ObjectHideFlags: 0
@@ -20917,7 +20928,6 @@ Transform:
   - {fileID: 2338624340419330061}
   - {fileID: 4499432077021312596}
   - {fileID: 1620403346}
-  - {fileID: 1908689338}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &461192499928819033
@@ -21854,6 +21864,7 @@ MonoBehaviour:
   duoTransform: {fileID: 430234607585998092}
   duoNavMesh: {fileID: 0}
   duoHidedTransform: {fileID: 986180805}
+  jumpscarePosition: {fileID: 1336878172}
   duolingoSpawns:
   - {fileID: 882753858}
   - {fileID: 1789500455}
@@ -21879,7 +21890,6 @@ MonoBehaviour:
   climbWindows:
   - {fileID: 1971139906}
   - {fileID: 878676035}
-  boxCollider: {fileID: 1908689339}
   superduoMaterials:
   - {fileID: 2100000, guid: 6dd7744e6917c974caf4c6756a180114, type: 2}
   - {fileID: 2100000, guid: 93f290518e8090b4bb3bb4acc68042ea, type: 2}
@@ -29028,3 +29038,5 @@ SceneRoots:
   - {fileID: 720961676}
   - {fileID: 1155973204}
   - {fileID: 3213653558498365928}
+  - {fileID: 461253420}
+  - {fileID: 1336878172}
